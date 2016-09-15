@@ -1,0 +1,51 @@
+#banner {
+  border-bottom: none;
+  margin-top: -20px;
+}
+
+#banner h1 {
+  font-size: 60px;
+  line-height: 1;
+  letter-spacing: -1px;
+}
+
+.vote.hero-unit {
+  position: relative;
+  padding: 30px 15px;
+  color: #F5F5F5;
+  text-align: center;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+  background: #6343b9;
+}
+
+.navbar-text {
+  margin-left: 15px;
+}
+
+div#voteBody {
+  h3 {
+    padding-bottom: 10px;
+  }
+  div#userStory {
+    div#divider {
+      border-right-width: 1px;
+      border-right-color: #004eff;
+      border-right-style: solid;
+      padding-right: 10px;
+    }
+  }
+  div#allPolls {
+    margin-top: 20px;
+    overflow-y: scroll;
+    height: 300px;
+  }
+  ul#pools {
+    font-size: 1.5em;
+    div#poolItem {
+      buttom.close {
+        color: red;
+        font-size: 30px;
+      }
+    }
+  }
+}

@@ -1,0 +1,47 @@
+header#banner.vote.hero-unit
+  .container
+    h1 Voting Machine !
+
+.container
+    .row
+      div#voteBody.col-lg-12
+        div#userStory.col-lg-5
+          h3 User Story
+          div#divider
+            ul
+              li As an authenticated user, I can keep my polls and come back later to access them.
+
+              li As an authenticated user, I can share my polls with my friends.
+
+              li As an authenticated user, I can see the aggregate results of my polls.
+
+              li As an authenticated user, I can delete polls that I decide I don't want anymore.
+
+              li As an authenticated user, I can create a poll with any number of possible items.
+
+              li As an unauthenticated or authenticated user, I can see and vote on everyone's polls.
+
+              li  As an unauthenticated or authenticated user, I can see the results of polls in chart form. (This could be implemented using Chart.js or Google Charts.)
+
+              li As an authenticated user, if I don't like the options on a poll, I can create a new option.
+
+        div.col-lg-4
+          h3 List of Current Polls
+            div#allPolls
+              ul#pools.nav.nav-tabs.nav-justified.col-md-4.col-lg-4.col-sm-6(ng-repeat='poll in $ctrl.allPolls')
+                li.list-group-item
+                  div#poolItem
+                    a(href=`/vote/{{poll._id}}`)
+                      | {{poll.name}}
+                      a.trash( ng-click='$ctrl.deletePoll(poll.name, poll._id)')
+                          span.glyphicon.glyphicon-trash.pull-right
+
+        div.col-lg-3
+          form.thing-form
+            p.input-group
+              input.form-control(type='text', placeholder='Add a new poll here.', ng-model='$ctrl.newPoll', maxlength='15')
+              </br>
+              span.input-group-btn
+                button.btn.btn-primary(type='submit', ng-click='$ctrl.addPoll()') Add New
+.container
+</br>

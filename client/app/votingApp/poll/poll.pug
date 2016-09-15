@@ -1,0 +1,31 @@
+header#banner.vote.hero-unit
+    .container
+        h1 This is the voting for {{ $ctrl.Poll.name}}
+
+.container
+      .row
+        #pollBody.col-lg-12
+
+          .col-lg-3
+            form.thing-form
+              p.input-group
+              .col-lg-12
+                input.form-control(type='text', placeholder='Add a new poll item here.', ng-model='$ctrl.newPollItem', maxlength='15')
+                br
+                span.input-group-btn
+                  button.btn.btn-primary(type='submit', ng-click='$ctrl.addPollItem()') Add New
+
+          #pollControls.col-lg-3.divider
+            ul#pollItem.nav.nav-tabs.nav-justified(ng-repeat='item in $ctrl.Poll.items')
+                li.list-group-item
+                  pre <strong> {{item.item}} </strong> has <strong> {{item.votes}} </strong> votes
+                  .btn-group
+                    .btn.btn-primary(ng-click='$ctrl.vote($index)') vote
+                    .btn.btn-default.trash(ng-click='$ctrl.deletePollItem($index)')
+                      span.glyphicon.glyphicon-trash.pull-right
+
+
+          #graph.col-lg-6
+            br
+            canvas(class="chart chart-bar", chart-data="$ctrl.data", chart-labels="$ctrl.labels", chart-series="$ctrl.series" ,chart-click="onClick" chart-colors="$ctrl.chartColors")
+

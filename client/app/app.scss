@@ -21,6 +21,7 @@ $fa-font-path: '/assets/fonts/font-awesome/';
 /* inject:scss */
 @import 'admin/admin';
 @import 'main/main';
+@import 'nightLifeApp/nl';
 @import 'votingApp/poll/poll';
 @import 'votingApp/vote';
 @import '../components/footer/footer';

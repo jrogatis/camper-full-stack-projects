@@ -28,10 +28,11 @@ import util from '../components/util/util.module';
 import socket from '../components/socket/socket.service';
 import vote from './votingApp/vote.component';
 import poll from './VotingApp/poll/poll.component';
+import nl from './nightLifeApp/nl.component';
 import './app.scss';
 
 angular.module('camperFullStackProjectsApp', [ngCookies, ngResource, ngSanitize, 'btford.socket-io',
-    ngRoute, uiBootstrap, _Auth, account, admin, navbar, footer, main, vote, poll, constants, socket, util
+    ngRoute, uiBootstrap, _Auth, account, admin, navbar, footer, main, vote, poll, nl, constants, socket, util
   ])
   .config(routeConfig)
   .run(function($rootScope, $location, Auth) {

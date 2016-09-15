@@ -1,0 +1,37 @@
+header#banner.nl.hero-unit
+  .container
+    h1 About tonight ?
+    span
+      i.fa.fa-glass.fa-fw
+      i.fa.fa-beer.fa-fw
+      i.fa.fa-coffee.fa-fw
+      i.fa.fa-taxi.fa-fw
+
+.container
+    .row
+      div#nlBody.col-lg-12
+        div#userStory.col-lg-4
+          h3 User Story
+          div#divider
+            ul
+              li As an unauthenticated user, I can view all bars in my area.
+
+              li As an authenticated user, I can add myself to a bar to indicate I am going there tonight.
+
+              li As an authenticated user, I can remove myself from a bar if I no longer want to go there.
+
+              li User Story: As an unauthenticated user, when I login I should not have to search again.
+
+        div.col-lg-7
+          h3 List of Current venues for your current location
+           form.thing-form
+            p.input-group
+              input.form-control(type='text', placeholder='search for venues on diferent location', ng-model='$ctrl.newPoll', maxlength='15')
+              br
+              span.input-group-btn
+                button.btn.btn-primary(type='submit', ng-click='$ctrl.addPoll()') search
+
+
+
+.container
+</br>

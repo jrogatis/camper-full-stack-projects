@@ -1,17 +1,14 @@
-.thing-form {
-  margin: 20px 0;
-}
 
 #banner {
   border-bottom: none;
   margin-top: -20px;
-}
-
-#banner h1 {
+   h1 {
   font-size: 60px;
   line-height: 1;
   letter-spacing: -1px;
+  }
 }
+
 
 .hero-unit {
   position: relative;
@@ -30,3 +27,10 @@ a.trash{
   font-size: 20px;
 }
 
+img#fccLogo {
+  height: 40px;
+}
+
+div#MainBody {
+  min-height: calc(100vh - 176px);
+}

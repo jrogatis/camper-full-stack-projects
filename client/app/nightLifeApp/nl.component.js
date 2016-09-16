@@ -1,65 +1,41 @@
 import angular from 'angular';
 const ngRoute = require('angular-route');
 import routing from './nl.routes';
-import _Auth from '../../components/auth/auth.module';
-import ModalService from '../../components/modal/modal.service';
+//import _Auth from '../../components/auth/auth.module';
+//import angularAria from 'angular-aria';
+//import angularAnimate from 'angular-animate';
+//import angularMaterial from 'angular-material';
+//import ModalService from '../../components/modal/modal.service';
+import { requestYelp }  from './yelp';
 
 export class NLController {
   /*@ngInject*/
-  constructor($http, $scope, $location, socket, Auth, Modal) {
+  constructor($http, $scope) {
     this.$http = $http;
-    this.socket = socket;
-    this.Auth = Auth;
-    this.Modal = Modal;
-    this.$location = $location;
+    this.$scope = $scope;
+   // //this.Auth = Auth;
+     this.$scope.callbackCounter = 0;
 
-   /* $scope.$on('$destroy', function() {
-      socket.unsyncUpdates('poll');
-    });*/
   }
 
-  /*$onInit() {
-    this.$http.get('/api/polls')
-      .then(response => {
-        this.allPolls = response.data;
-        this.socket.syncUpdates('poll', this.allPolls);
-      });
+  searchVenue () {
+    requestYelp( {
+      location: 'San Francisco',
+      sort: '2'
+      }, this.$scope.callbackCounter, (url, param) => {
+        this.$http.jsonp(url,{params: param})
+          .success(ret => {
+          this.AllVenues = ret.data;
+          this.$scope.callbackCounter++
+          console.log('ret da consulta',ret);
+        })
+          .catch(error =>{console.log(error)})
+    })
   }
 
-  deletePoll(name, pollId) {
-    if(this.Auth.isLoggedInSync()) {
-      const user = this.Auth.getCurrentUserSync();
-      const actualPoll = this.allPolls.filter(poll => {
-        return poll._id === pollId;
-      });
-      if(user._id === actualPoll[0].owner) {
-        this.Modal.confirm.delete(PollId => {
-          this.$http.delete(`/api/polls/${PollId}`);
-        })(name, pollId);
-      } else {
-        this.Modal.needOwnership();
-      }
-    } else {
-      this.Modal.needLogin();
-    }
-  }
-
-  addPoll() {
-    if(this.newPoll && this.Auth.isLoggedInSync()) {
-      const user = this.Auth.getCurrentUserSync();
-      this.$http.post('/api/polls', {name: this.newPoll, owner: user._id})
-        .then(response => {
-          this.$location.path(`/vote/${response.data._id}`);
-          this.newPoll = '';
-        });
-    } else {
-      this.Modal.needLogin();
-    }
-  }*/
 }
 
-
-export default angular.module('camperFullStackProjectsApp.nl', [ngRoute, _Auth, ModalService])
+export default angular.module('camperFullStackProjectsApp.nl', [ngRoute])
   .config(routing)
   .component('nl', {
     template: require('./nl.main.pug'),

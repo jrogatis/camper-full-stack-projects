@@ -1,4 +1,4 @@
-header#banner.nl.hero-unit
+header#banner.nl.hero-unit(layout="row", layout-xs="column")
   .container
     h1 About tonight ?
     span
@@ -6,32 +6,27 @@ header#banner.nl.hero-unit
       i.fa.fa-beer.fa-fw
       i.fa.fa-coffee.fa-fw
       i.fa.fa-taxi.fa-fw
+div#nlBody(md-theme="default")
+  #nlContainer.container
+    div#nlBody(layout="row", layout-xs="column")
+      div#userStory(flex="35", flex-xs="100")
+        h3 User Story
+        div#divider
+          ul
+            li As an unauthenticated user, I can view all bars in my area.
 
-.container
-    .row
-      div#nlBody.col-lg-12
-        div#userStory.col-lg-4
-          h3 User Story
-          div#divider
-            ul
-              li As an unauthenticated user, I can view all bars in my area.
+            li As an authenticated user, I can add myself to a bar to indicate I am going there tonight.
 
-              li As an authenticated user, I can add myself to a bar to indicate I am going there tonight.
+            li As an authenticated user, I can remove myself from a bar if I no longer want to go there.
 
-              li As an authenticated user, I can remove myself from a bar if I no longer want to go there.
+            li User Story: As an unauthenticated user, when I login I should not have to search again.
 
-              li User Story: As an unauthenticated user, when I login I should not have to search again.
-
-        div.col-lg-7
-          h3 List of Current venues for your current location
-           form.thing-form
-            p.input-group
-              input.form-control(type='text', placeholder='search for venues on diferent location', ng-model='$ctrl.newPoll', maxlength='15')
-              br
-              span.input-group-btn
-                button.btn.btn-primary(type='submit', ng-click='$ctrl.addPoll()') search
-
-
-
-.container
-</br>
+      div#listVenue(flex="65" layout="column", flex-xs="100")
+        form(layout layout-align="center", layout-padding)
+          div(layout="row" flex)
+            md-input-container.md-icon-float.md-block.md-title(flex)
+              label.Search search for venues
+              input(type="text", ng-model='$ctrl.searchTerms')
+            div
+              md-button.md-raised.md-default.md-primary(ng-Click ='$ctrl.searchVenue()', aria-label='searchForm')
+                 i.fa.fa-search.fa-fw

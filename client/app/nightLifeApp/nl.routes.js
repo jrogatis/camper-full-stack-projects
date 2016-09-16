@@ -3,7 +3,8 @@
 export default function routes($routeProvider) {
   'ngInject';
 
-  $routeProvider.when('/nl', {
+  $routeProvider
+    .when('/nl', {
       template: '<nl></nl>'
     });
 }

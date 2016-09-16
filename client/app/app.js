@@ -18,6 +18,10 @@ import {
 } from './app.config';
 
 import _Auth from '../components/auth/auth.module';
+import ModalService from '../components/modal/modal.service';
+import angularAria from 'angular-aria';
+import angularAnimate from 'angular-animate';
+import angularMaterial from 'angular-material';
 import account from './account';
 import admin from './admin';
 import navbar from '../components/navbar/navbar.component';
@@ -32,7 +36,7 @@ import nl from './nightLifeApp/nl.component';
 import './app.scss';
 
 angular.module('camperFullStackProjectsApp', [ngCookies, ngResource, ngSanitize, 'btford.socket-io',
-    ngRoute, uiBootstrap, _Auth, account, admin, navbar, footer, main, vote, poll, nl, constants, socket, util
+    ngRoute, uiBootstrap, _Auth, ModalService, angularAria, angularAnimate, angularMaterial, account, admin, navbar, footer, main, vote, poll, nl, constants, socket, util
   ])
   .config(routeConfig)
   .run(function($rootScope, $location, Auth) {

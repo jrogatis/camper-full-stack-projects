@@ -21,12 +21,23 @@ div#nlBody(md-theme="default")
 
             li User Story: As an unauthenticated user, when I login I should not have to search again.
 
-      div#listVenue(flex="65" layout="column", flex-xs="100")
+      div#listVenues(flex="65" layout="column", flex-xs="100")
         form(layout layout-align="center", layout-padding)
           div(layout="row" flex)
             md-input-container.md-icon-float.md-block.md-title(flex)
               label.Search search for venues
-              input(type="text", ng-model='$ctrl.searchTerms')
+              input(type="text", ng-model='$ctrl.searchTerms' , ng-keypress ='$ctrl.CaptEnter()')
             div
               md-button.md-raised.md-default.md-primary(ng-Click ='$ctrl.searchVenue()', aria-label='searchForm')
                  i.fa.fa-search.fa-fw
+        md-content#listContent(ng-show= "$ctrl.AllVenues")
+          md-list(flex)#businessesList
+            md-list-item.md-3-line.md-long-text(ng-animate="'animate'" ng-repeat='item in $ctrl.AllVenues')
+              div#image(layout="column")
+                img#stars(ng-src = '{{item.rating_img_url}}')
+                img(ng-src = '{{item.image_url}}')
+              div#text(layout="column")
+                h3#name {{item.name}}
+                p {{item.snippet_text}}
+              md-button.md-secondary {{$ctrl.going}}going
+            md-divider.md-inset

@@ -18,12 +18,24 @@ export class NLController {
     this.$scope = $scope;
     // //this.Auth = Auth;
     this.$scope.callbackCounter = 0;
-
   }
 
-  CaptEnter(e) {
-    if (event.which === 13) {
-      this.searchVenue()
+  addNewVenue() {
+    console.log('aqui');
+    this.$http.post('/api/nl', {
+      ID: 'teste',
+      usersGoing: [{
+        UserID: 'teste'
+      }]
+    })
+      .then(response => {
+        console.log(response);
+      });
+  }
+
+  CaptEnter(event) {
+    if(event.which === 13) {
+      this.searchVenue();
     }
   }
 
@@ -33,28 +45,40 @@ export class NLController {
       sort: '2'
     }, this.$scope.callbackCounter, (url, param) => {
       this.$http.jsonp(url, {
-          params: param
-        })
+        params: param
+      })
         .success(ret => {
           this.AllVenues = ret.businesses;
-
           console.log('ret da consulta', this.AllVenues);
         })
         .catch(error => {
-          console.log(error)
-        })
-    })
-    this.$scope.callbackCounter++
+          console.log(error);
+        });
+    });
+    this.$scope.callbackCounter++;
   }
 
+  searchForUsersGoing() {
+    //firt try for each venue find if have registers on database
+    this.AllVenues.map(venue => {
+      this.$ttp.get('/api/nl/${venue.id}');
+    });
+  }
 }
 
 export default angular.module('camperFullStackProjectsApp.nl', [ngRoute])
-  .config(routing, function ($mdThemingProvider) {
-    $mdThemingProvider.theme('dark-grey').backgroundPalette('grey').dark();
-    $mdThemingProvider.theme('dark-orange').backgroundPalette('orange').dark();
-    $mdThemingProvider.theme('dark-purple').backgroundPalette('deep-purple').dark();
-    $mdThemingProvider.theme('dark-blue').backgroundPalette('blue').dark();
+  .config(routing, function($mdThemingProvider) {
+    $mdThemingProvider.theme('dark-grey').backgroundPalette('grey')
+      .dark()
+      .theme('dark-orange')
+      .backgroundPalette('orange')
+      .dark()
+      .theme('dark-purple')
+      .backgroundPalette('deep-purple')
+      .dark()
+      .theme('dark-blue')
+      .backgroundPalette('blue')
+      .dark();
   })
   .component('nl', {
     template: require('./nl.main.pug'),

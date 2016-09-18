@@ -39,5 +39,5 @@ div#nlBody(md-theme="default")
               div#text(layout="column")
                 h3#name {{item.name}}
                 p {{item.snippet_text}}
-              md-button.md-secondary {{$ctrl.going}}going
+              md-button.md-secondary(ng-Click='$ctrl.addNewVenue()') {{$ctrl.going}}going
             md-divider.md-inset

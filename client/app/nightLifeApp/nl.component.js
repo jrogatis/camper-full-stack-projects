@@ -41,41 +41,48 @@ export class NLController {
   }
 
   HaveThisUser(venue) {
-      console.log(venue);
-      let have = null;
-      venue.usersGoing.map((user, index) => { 
-         //console.log(user, user.UserID, this.CurUser._id)
-        if (user.userID === this.CurUser._id) {
-          console.log('tem', index);
-          have = index; 
-        };
+    console.log(venue);
+    let have = null;
+    venue.usersGoing.map((user, index) => {
+      //console.log(user, user.UserID, this.CurUser._id)
+      if (user.userID === this.CurUser._id) {
+        console.log('tem', index);
+        have = index;
+      };
     })
     return have
   }
-  
+
   setUserGoing(VenueIndex) {
     //serch firt to know if this user alredy check this option
     this.$http.get(`api/nl/${this.AllVenues[VenueIndex].id}`)
       .success(venue => {
         let patches;
         const observer = jsonpatch.observe(venue)
-          if (this.HaveThisUser(venue) === null) {
-            venue.usersGoing.push({userID : this.CurUser._id});
-            this.AllVenues[VenueIndex].QuantUsersGoing++
-          } else {
-               this.AllVenues[VenueIndex].QuantUsersGoing--
-            venue.usersGoing.splice(this.HaveThisUser(venue),1);
-          }
-          patches = jsonpatch.generate(observer);
-          this.$http.patch(`/api/nl/${venue._id}`, patches);        
-      })
-      .catch((error, volta) => {
-        console.log(volta);
-        const observer = jsonpatch.observe(venue);
-        venue.usersGoing.splice(this.HaveThisUser(venue),0);
+        if (this.HaveThisUser(venue) === null) {
+          venue.usersGoing.push({
+            userID: this.CurUser._id
+          });
+          this.AllVenues[VenueIndex].QuantUsersGoing++;
+        } else {
+          this.AllVenues[VenueIndex].QuantUsersGoing--;
+          venue.usersGoing.splice(this.HaveThisUser(venue), 1);
+        }
         patches = jsonpatch.generate(observer);
+        this.$http.patch(`/api/nl/${venue._id}`, patches);
+      })
+      .catch(error => {
+      console.log(this.AllVenues[VenueIndex]);
+        const toAdd = {
+          ID: this.AllVenues[VenueIndex].id,
+          usersGoing: [{
+            userID: this.CurUser._id
+          }]
+        }
+        this.$http.post('/api/nl', toAdd)
+          .then(this.AllVenues[VenueIndex].QuantUsersGoing++);
         console.log(error);
-      }) 
+      })
   }
 
   reqYelp(callback) {

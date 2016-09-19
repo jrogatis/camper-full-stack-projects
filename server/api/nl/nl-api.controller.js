@@ -18,8 +18,8 @@ function respondWithResult(res, statusCode) {
 
   statusCode = statusCode || 200;
   return entity => {
-      //console.log('no respond', entity);
-    if(entity) {
+    //console.log('no respond', entity);
+    if (entity) {
       return res.status(statusCode).json(entity);
     }
     return null;
@@ -28,10 +28,10 @@ function respondWithResult(res, statusCode) {
 
 function patchUpdates(patches) {
 
-  return function(entity) {
+  return function (entity) {
     try {
       jsonpatch.apply(entity, patches);
-    } catch(err) {
+    } catch (err) {
       return Promise.reject(err);
     }
     return entity.save();
@@ -39,10 +39,10 @@ function patchUpdates(patches) {
 }
 
 function removeEntity(res) {
-  return function(entity) {
-    if(entity) {
+  return function (entity) {
+    if (entity) {
       return entity.remove()
-        .then(function() {
+        .then(function () {
           return res.status(204).end();
         });
     }
@@ -50,8 +50,8 @@ function removeEntity(res) {
 }
 
 function handleEntityNotFound(res) {
-  return function(entity) {
-    if(!entity) {
+  return function (entity) {
+    if (!entity) {
       res.status(404).end();
       return null;
     }
@@ -61,7 +61,7 @@ function handleEntityNotFound(res) {
 
 function handleError(res, statusCode) {
   statusCode = statusCode || 500;
-  return function(err) {
+  return function (err) {
     res.status(statusCode).send(err);
   };
 }
@@ -76,7 +76,9 @@ export function index(req, res) {
 
 export function show(req, res) {
   //console.log('no show', req.params.id);
-  return Nl.findOne({"ID":  req.params.id}).exec()    
+  return Nl.findOne({
+      "ID": req.params.id
+    }).exec()
     .then(handleEntityNotFound(res))
     .then(respondWithResult(res))
     .catch(handleError(res));
@@ -91,17 +93,21 @@ export function create(req, res) {
 
 // Upserts the given nl in the DB at the specified ID
 export function upsert(req, res) {
-  if(req.body._id) {
+  if (req.body._id) {
     delete req.body._id;
   }
-  return Nl.findOneAndUpdate(req.params.id, req.body, {upsert: true, setDefaultsOnInsert: true, runValidators: true}).exec()
+  return Nl.findOneAndUpdate(req.params.id, req.body, {
+      upsert: true,
+      setDefaultsOnInsert: true,
+      runValidators: true
+    }).exec()
     .then(respondWithResult(res))
     .catch(handleError(res));
 }
 
 // Updates an existing nl in the DB
 export function patch(req, res) {
-  if(req.body._id) {
+  if (req.body._id) {
     delete req.body._id;
   }
   return Nl.findById(req.params.id).exec()
@@ -119,13 +125,15 @@ export function destroy(req, res) {
     .catch(handleError(res));
 }
 
-export function quantUsers(req,res) {
-  return Nl.findOne({"ID":  req.params.id}, "usersGoing").exec()    
+export function quantUsers(req, res) {
+  return Nl.findOne({
+      "ID": req.params.id
+    }, "usersGoing").exec()
     .then(entity => {
       if (!entity) {
-        return res.status(200).json(0); 
-      } 
-        return res.status(200).json(entity.usersGoing.length); 
+        return res.status(200).json(0);
+      }
+      return res.status(200).json(entity.usersGoing.length);
     })
     .catch(handleError(res));
 }

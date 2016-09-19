@@ -30,6 +30,8 @@ div#nlBody(md-theme="default")
             div
               md-button.md-raised.md-default.md-primary(ng-Click ='$ctrl.searchVenue()', aria-label='searchForm')
                  i.fa.fa-search.fa-fw
+        div(ng-show= "searching", layout="row", layout-align="center center")   
+          i.fa.fa-spinner.fa-spin.fa-5x
         md-content#listContent(ng-show= "$ctrl.AllVenues")
           md-list(flex)#businessesList
             md-list-item.md-3-line.md-long-text(ng-animate="'animate'" ng-repeat='item in $ctrl.AllVenues')
@@ -39,5 +41,5 @@ div#nlBody(md-theme="default")
               div#text(layout="column")
                 h3#name {{item.name}}
                 p {{item.snippet_text}}
-              md-button.md-secondary(ng-Click='$ctrl.addNewVenue()') {{$ctrl.going}}going
+              md-button.md-secondary(ng-Click='$ctrl.setUserGoing($index)') {{item.QuantUsersGoing}} going 
             md-divider.md-inset

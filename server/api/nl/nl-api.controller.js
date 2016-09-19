@@ -6,6 +6,7 @@
  * PUT     /api/nl/:id          ->  upsert
  * PATCH   /api/nl/:id          ->  patch
  * DELETE  /api/nl/:id          ->  destroy
+ * GET     /api/nl:id:qUsers    ->  quantUsers
  */
 
 'use strict';
@@ -14,9 +15,10 @@ import jsonpatch from 'fast-json-patch';
 import Nl from './nl-api.model';
 
 function respondWithResult(res, statusCode) {
+
   statusCode = statusCode || 200;
   return entity => {
-     console.log("no respondWithResult do nl", entity)
+      //console.log('no respond', entity);
     if(entity) {
       return res.status(statusCode).json(entity);
     }
@@ -71,9 +73,10 @@ export function index(req, res) {
     .catch(handleError(res));
 }
 
-// Gets a single nl from the DB
+
 export function show(req, res) {
-  return Nl.findById(req.params.id).exec()
+  //console.log('no show', req.params.id);
+  return Nl.findOne({"ID":  req.params.id}).exec()    
     .then(handleEntityNotFound(res))
     .then(respondWithResult(res))
     .catch(handleError(res));
@@ -113,5 +116,16 @@ export function destroy(req, res) {
   return Nl.findById(req.params.id).exec()
     .then(handleEntityNotFound(res))
     .then(removeEntity(res))
+    .catch(handleError(res));
+}
+
+export function quantUsers(req,res) {
+  return Nl.findOne({"ID":  req.params.id}, "usersGoing").exec()    
+    .then(entity => {
+      if (!entity) {
+        return res.status(200).json(0); 
+      } 
+        return res.status(200).json(entity.usersGoing.length); 
+    })
     .catch(handleError(res));
 }

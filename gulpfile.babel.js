@@ -166,6 +166,7 @@ gulp.task('env:all', () => {
     let localConfig;
     try {
         localConfig = require(`./${serverPath}/config/local.env`);
+        //console.log(localConfig);
     } catch (e) {
         localConfig = {};
     }

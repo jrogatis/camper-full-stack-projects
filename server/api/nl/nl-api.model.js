@@ -4,8 +4,8 @@ import mongoose from 'mongoose';
 
 var NlSchema = new mongoose.Schema({
   ID: String,
-  UsersGoing: [{
-    UserID: String}]
+  usersGoing: [{
+    userID: String}]
 });
 
 export default mongoose.model('Nl', NlSchema);

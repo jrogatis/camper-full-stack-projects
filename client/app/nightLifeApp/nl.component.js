@@ -30,7 +30,7 @@ export class NLController {
 
   }
 
-  CaptEnter() {
+  CaptEnter(event) {
     if(event.which === 13) {
       this.searchVenue();
     }

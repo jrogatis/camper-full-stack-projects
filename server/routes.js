@@ -13,6 +13,7 @@ export default function(app) {
   app.use('/api/users', require('./api/user'));
   app.use('/api/polls', require('./api/poll'));
   app.use('/api/nl', require('./api/nl'));
+  app.use('/api/yelp', require('./api/yelp'));
 
   app.use('/auth', require('./auth').default);
 
@@ -23,6 +24,6 @@ export default function(app) {
   // All other routes should redirect to the index.html
   app.route('/*')
     .get((req, res) => {
-      res.sendFile(path.resolve(app.get('appPath') + '/index.html'));
+      res.sendFile(path.resolve(`${app.get('appPath')}/index.html`));
     });
 }

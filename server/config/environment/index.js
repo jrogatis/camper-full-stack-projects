@@ -61,7 +61,14 @@ var all = {
     clientID: process.env.GOOGLE_ID || 'id',
     clientSecret: process.env.GOOGLE_SECRET || 'secret',
     callbackURL: `${process.env.DOMAIN || ''}/auth/google/callback`
-  }
+  },
+
+  yelp: {
+    oauthConsumerKey: process.env.oauthConsumerKey || 'oauthConsumerKey' ,
+    oauthToken: process.env.oauthToken || 'oauthToken',
+    consumerSecret: process.env.consumerSecret ||'consumerSecret' ,
+    tokenSecret: process.env.tokenSecret || 'tokenSecret'
+}
 };
 
 // Export the config object based on the NODE_ENV

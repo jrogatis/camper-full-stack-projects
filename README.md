@@ -1,4 +1,6 @@
-# camper-full-stack-projects-v2
+# Free Code Camper Full Stack Projects 
+
+this projects are the collection of challenges to acquire my Full Stack Dev certificate 
 
 This project was generated with the [Angular Full-Stack Generator](https://github.com/DaftMonk/generator-angular-fullstack) version 4.0.4.
 
@@ -6,9 +8,8 @@ This project was generated with the [Angular Full-Stack Generator](https://githu
 
 ### Prerequisites
 
-- [Git](https://git-scm.com/)
+
 - [Node.js and npm](nodejs.org) Node >= 4.x.x, npm >= 2.x.x
-- [Gulp](http://gulpjs.com/) (`npm install --global gulp`)
 - [MongoDB](https://www.mongodb.org/) - Keep a running daemon with `mongod`
 
 ### Developing

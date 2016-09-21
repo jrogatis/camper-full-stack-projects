@@ -5,11 +5,11 @@
 'use strict';
 
 import {EventEmitter} from 'events';
-import Nl from './nl-api.model';
-var NlEvents = new EventEmitter();
+import Poll from './poll.model';
+var PollEvents = new EventEmitter();
 
 // Set max event listeners (0 == unlimited)
-NlEvents.setMaxListeners(0);
+PollEvents.setMaxListeners(0);
 
 // Model events
 var events = {
@@ -20,14 +20,14 @@ var events = {
 // Register the event emitter to the model events
 for(var e in events) {
   let event = events[e];
-  Nl.schema.post(e, emitEvent(event));
+  Poll.schema.post(e, emitEvent(event));
 }
 
 function emitEvent(event) {
   return function(doc) {
-    NlEvents.emit(`${event}: ${doc._id}`, doc);
-    NlEvents.emit(event, doc);
+    PollEvents.emit(event + ':' + doc._id, doc);
+    PollEvents.emit(event, doc);
   };
 }
 
-export default NlEvents;
+export default PollEvents;

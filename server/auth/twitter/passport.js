@@ -2,6 +2,7 @@ import passport from 'passport';
 import {Strategy as TwitterStrategy} from 'passport-twitter';
 
 export function setup(User, config) {
+  console.log('config.twitter.callbackURL', config.twitter.callbackURL);
   passport.use(new TwitterStrategy({
     consumerKey: config.twitter.clientID,
     consumerSecret: config.twitter.clientSecret,

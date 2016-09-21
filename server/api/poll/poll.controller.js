@@ -24,10 +24,10 @@ function respondWithResult(res, statusCode) {
 }
 
 function patchUpdates(patches) {
-
   return function(entity) {
     try {
       jsonpatch.apply(entity, patches);
+      //Reflect.apply(jsonpatch, entity, [patches]);
     } catch(err) {
       return Promise.reject(err);
     }

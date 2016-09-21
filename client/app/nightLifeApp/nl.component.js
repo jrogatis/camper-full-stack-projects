@@ -8,13 +8,26 @@ import jsonpatch from 'fast-json-patch';
 
 export class NLController {
   /*@ngInject*/
-  constructor($scope, $http, Auth, $window) {
+  constructor($scope, $http, Auth, $window,  $routeParams) {
     this.$http = $http;
     this.$scope = $scope;
     this.Auth = Auth;
     this.$window = $window;
     this.$scope.searching = false;
     this.CurUser = this.Auth.getCurrentUserSync();
+    this.$routeParams = $routeParams;
+  }
+
+  $onInit() {
+
+      this.Auth.isLoggedIn(response => {
+        console.log('no islogged', response);
+        if (response === true &&  this.$routeParams.searchString) {
+            this.searchTerms = this.$routeParams.searchString
+            this.fillListVenues()
+        };
+      })
+
   }
 
   CaptEnter() {
@@ -65,7 +78,7 @@ export class NLController {
   }
 
   fillListVenues() {
-      this.$scope.searching = true;
+    this.$scope.searching = true;
     let newList = [];
       this.$http.get(`/api/yelp/${this.searchTerms}`)
         .then(response => {
@@ -82,17 +95,20 @@ export class NLController {
   }
 
   searchVenue() {
-    if(this.Auth.isLoggedInSync()) {
-      this.fillListVenues()
-    } else {
-      //twitter autoeization
-      console.log('searchVenue', this.$window.location.href)
-      this.$window.location.href = `/auth/twitter/nl/${encodeURIComponent(this.$window.location.href)}`;
-
-      // a procura
-
+     this.AllVenues = '';
+    if (this.searchTerms) {
+       this.Auth.isLoggedIn(response => {
+        if (response === true) {
+          this.fillListVenues()
+        } else {
+          //twitter autoeization
+          let pathToReturn = encodeURIComponent(`${this.$window.location.href}/${this.searchTerms}`)
+          this.$window.location.href = `/auth/twitter/nl/${pathToReturn}`;
+        }
+      })
     }
   }
+
 
   searchForUsersGoing(id, callback) {
     //firt try for each venue find if have registers on database

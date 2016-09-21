@@ -86,7 +86,7 @@ export class NLController {
       this.fillListVenues()
     } else {
       //twitter autoeization
-      console.log('aqui', this.$window.location.href)
+      console.log('searchVenue', this.$window.location.href)
       this.$window.location.href = `/auth/twitter/nl/${encodeURIComponent(this.$window.location.href)}`;
 
       // a procura

@@ -11,18 +11,13 @@ router
     failureRedirect: '/signup',
     session: false
   }))
-   .get('/nl/:redirectTo',(req,res,next) => {
-      urlRedirect =req.params.redirectTo
-      console.log('urlRedirect', urlRedirect);
-     passport.authenticate('twitter', {
-      failureRedirect: '/signup',
-      session: false
+   .get('/nl/:redirectTo',
+     passport.authenticate('twitter', (req, res) => {
+      res.redirect(req.params.redirectTo);
     })
-     console.log('urlRedirect', 'terminei');
-  })
-  .get('/callback', passport.authenticate('twitter', {
+  )
+ .get('/callback', passport.authenticate('twitter', {
     failureRedirect: '/signup',
-    successRedirect: urlRedirect,
     session: false
   }), setTokenCookie);
 

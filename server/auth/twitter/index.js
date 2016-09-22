@@ -31,7 +31,7 @@ router
       if(urlRedirect) {
         res.redirect(urlRedirect);
       } else {
-           res.redirect('/');
+        res.redirect('/');
       }
     }
   );

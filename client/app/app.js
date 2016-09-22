@@ -33,10 +33,11 @@ import socket from '../components/socket/socket.service';
 import vote from './votingApp/vote.component';
 import poll from './VotingApp/poll/poll.component';
 import nl from './nightLifeApp/nl.component';
+import stockM from './stockMarket/stockM.component';
 import './app.scss';
 
 angular.module('camperFullStackProjectsApp', [ngCookies, ngResource, ngSanitize, 'btford.socket-io',
-    ngRoute, uiBootstrap, _Auth, ModalService, angularAria, angularAnimate, angularMaterial, account, admin, navbar, footer, main, vote, poll, nl, constants, socket, util
+    ngRoute, uiBootstrap, _Auth, ModalService, angularAria, angularAnimate, angularMaterial, account, admin, navbar, footer, main, vote, poll, nl, stockM, constants, socket, util
   ])
   .config(routeConfig)
   .run(function($rootScope, $location, Auth) {
@@ -46,7 +47,8 @@ angular.module('camperFullStackProjectsApp', [ngCookies, ngResource, ngSanitize,
     $rootScope.$on('$stateChangeStart', function(event, next) {
       Auth.isLoggedIn(function(loggedIn) {
         if(next.authenticate && !loggedIn) {
-          $location.path('/login');
+          //$location.path('/login');
+          $location.path('/');
         }
       });
     });

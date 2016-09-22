@@ -8,7 +8,7 @@ import jsonpatch from 'fast-json-patch';
 
 export class NLController {
   /*@ngInject*/
-  constructor($scope, $http, Auth, $window,  $routeParams) {
+  constructor($scope, $http, Auth, $window, $routeParams) {
     this.$http = $http;
     this.$scope = $scope;
     this.Auth = Auth;
@@ -19,15 +19,12 @@ export class NLController {
   }
 
   $onInit() {
-
-      this.Auth.isLoggedIn(response => {
-        console.log('no islogged', response);
-        if (response === true &&  this.$routeParams.searchString) {
-            this.searchTerms = this.$routeParams.searchString
-            this.fillListVenues()
-        };
-      })
-
+    this.Auth.isLoggedIn(response => {
+      if(response === true && this.$routeParams.searchString) {
+        this.searchTerms = this.$routeParams.searchString;
+        this.fillListVenues();
+      }
+    });
   }
 
   CaptEnter(event) {
@@ -80,8 +77,8 @@ export class NLController {
   fillListVenues() {
     this.$scope.searching = true;
     let newList = [];
-      this.$http.get(`/api/yelp/${this.searchTerms}`)
-        .then(response => {
+    this.$http.get(`/api/yelp/${this.searchTerms}`)
+      .then(response => {
         response.data.businesses.map(venue => {
           let newVenue = venue;
           this.searchForUsersGoing(venue.id, quant => {
@@ -95,17 +92,17 @@ export class NLController {
   }
 
   searchVenue() {
-     this.AllVenues = '';
-    if (this.searchTerms) {
-       this.Auth.isLoggedIn(response => {
-        if (response === true) {
-          this.fillListVenues()
+    this.AllVenues = '';
+    if(this.searchTerms) {
+      this.Auth.isLoggedIn(response => {
+        if(response === true) {
+          this.fillListVenues();
         } else {
           //twitter autoeization
-          let pathToReturn = encodeURIComponent(`${this.$window.location.href}/${this.searchTerms}`)
+          let pathToReturn = encodeURIComponent(`${this.$window.location.href}/${this.searchTerms}`);
           this.$window.location.href = `/auth/twitter/nl/${pathToReturn}`;
         }
-      })
+      });
     }
   }
 

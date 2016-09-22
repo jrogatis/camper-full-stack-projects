@@ -29,8 +29,7 @@ function patchUpdates(patches) {
   return function(entity) {
     try {
       jsonpatch.apply(entity, patches);
-    }
-    catch(err) {
+    } catch(err) {
       return Promise.reject(err);
     }
     return entity.save();

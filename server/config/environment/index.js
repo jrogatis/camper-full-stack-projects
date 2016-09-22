@@ -64,11 +64,11 @@ var all = {
   },
 
   yelp: {
-    oauthConsumerKey: process.env.oauthConsumerKey || 'oauthConsumerKey' ,
+    oauthConsumerKey: process.env.oauthConsumerKey || 'oauthConsumerKey',
     oauthToken: process.env.oauthToken || 'oauthToken',
-    consumerSecret: process.env.consumerSecret ||'consumerSecret' ,
+    consumerSecret: process.env.consumerSecret || 'consumerSecret',
     tokenSecret: process.env.tokenSecret || 'tokenSecret'
-}
+  }
 };
 
 // Export the config object based on the NODE_ENV

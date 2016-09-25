@@ -1,0 +1,92 @@
+$stockMBackGroundColor: #696565;
+$stockMFontColor: white;
+div#stockMBodySup {
+  margin-top: -20px;
+  padding-top: 20px;
+  background-color: $stockMBackGroundColor;
+  color: $stockMFontColor;
+
+  div#stockMGraph{
+    background-color:$stockMBackGroundColor;
+    nvd3{
+      background-color: $stockMBackGroundColor;
+    }
+
+  }
+  div#stockMitems {
+    form {
+      div md-input-container {
+        label {
+          color: $stockMFontColor;
+        }
+        div.md-errors-spacer {
+          max-height: 0px;
+           min-height: 0px;
+      }
+      }
+    }
+    md-input-container.md-default-theme label,
+    md-input-container label,
+    md-input-container.md-default-theme .md-placeholder,
+    md-input-container .md-placeholder {
+      //font-size: 15px;
+      color: $stockMFontColor;
+      border-bottom-color: $stockMFontColor;
+      .md-input-focused {
+
+      }
+    }
+    div div button.md-raised.md-default.md-primary.md-button.md-default-theme.md-ink-ripple {
+      background-color: white;
+      i {
+        color: blue;
+      }
+    }
+    md-content#StockListContent {
+       border-radius: 0.5em;
+      md-list {
+        max-height: calc(100vh - 176px);
+        overflow-y: scroll;
+
+        // height: 300px;
+        md-list-item {
+          border-radius: 0.5em;
+          margin-left: 10px;
+          margin-right: 10px;
+          padding: 10px 0px 10px 10px;
+          border-bottom: 1px dotted black;
+          opacity: .9;
+          -webkit-transition: all 0.3s ease-out;
+          -moz-transition: all 0.3s ease-out;
+          -o-transition: all 0.3s ease-out;
+          transition: all 0.3s ease-out;
+          div button {
+            padding-right: 5px;
+          }
+
+          div#text {
+            h3#ID {
+              margin-top: 0px;
+              color: darkblue;
+            }
+          }
+        }
+        md-list-item:hover {
+          background: lightgray;
+          opacity: 1;
+          -webkit-transform: scale(1.1);
+          -moz-transform: scale(1.1);
+          -ms-transform: scale(1.1);
+          transform: scale(1.1);
+          div.md-secondary-container {
+            button.close.md-secondary {
+              span.glyphicon.glyphicon-trash.pull-right {
+                color: red;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -19,6 +19,7 @@ function onConnect(socket) {
   //require('../api/thing/thing.socket').register(socket);
   require('../api/poll/poll.socket').register(socket);
   require('../api/nl/nl-api.socket').register(socket);
+  require('../api/stocks/stocks-api.socket').register(socket);
 }
 
 export default function(socketio) {

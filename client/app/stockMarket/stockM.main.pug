@@ -1,22 +1,26 @@
-header#banner.nl.hero-unit(layout="row", layout-xs="column")
-  .container
-    h1 Stock Market Real Time Charts
-    span
-      i.fa.fa-money.fa-fw
-div#nlBody(md-theme="default")
+div#stockMBodySup(md-theme="default")
   #nlContainer.container
-    div#nlBody(layout="row", layout-xs="column")
-      div#userStory(flex="35", flex-xs="100")
-        h3 User Story
-        div#divider
-          ul
-            li I can view a graph displaying the recent trend lines for each added stock.
+    div#stockMBody(layout="row", layout-xs="column")
+      div#stockMGraph(flex="85" layout="column", flex-xs="100")
+        nvd3.with-3d-shadow.with-transitions(options = "$ctrl.chartOptions" , data ="$ctrl.data", class="")
+      div#stockMitems(flex="15" layout="column", flex-xs="100")
+        form(layout layout-align="center")
+          div(layout="row" flex)
+            md-input-container.md-icon-float.md-block.md-title(flex)
+              label.Search add stocks
+              input(type="text", ng-model='$ctrl.stockAdd' , maxlength= '4', uppercase-only, ng-keypress ='$ctrl.CaptEnter($event)')
+            div
+              md-button.md-raised.md-default.md-primary.md-icon-button(ng-Click ='$ctrl.addStock()', aria-label='searchForm')
+                 i.fa.fa-search.fa-fw
+        md-content#StockListContent(ng-show= "$ctrl.stockList")
+          md-list(flex)#businessesList
+            md-list-item.md-3-line.md-long-text(ng-animate="'animate'" ng-repeat='item in $ctrl.stockList')
+              div#text(layout="column")
+                h3#ID {{item.ID}}
+                p {{item.DESC}}
+              button.close.md-secondary( ng-click='$ctrl.deleteStock(item._id)', type='button')
+                span.glyphicon.glyphicon-trash.pull-right
+            md-divider.md-inset
 
-            li I can add new stocks by their symbol name.
 
-            li I can remove stocks.
-
-            li I can see changes in real-time when any other user adds or removes a stock. For this you will need to use Web Sockets.
-
-      div#listVenues(flex="65" layout="column", flex-xs="100")
 

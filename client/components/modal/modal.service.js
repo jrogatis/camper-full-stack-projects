@@ -107,7 +107,48 @@ export function Modal($rootScope, $uibModal) {
           }]
         }
       }, 'modal-danger');
+    },
+    invalidQuote() {
+      var invalidQuoteModal;
+      invalidQuoteModal = openModal({
+        modal: {
+          dismissable: true,
+          title: 'Quote Code',
+          html: '<h3>This quote code is invalid!</h3>',
+          buttons: [{
+            classes: 'btn-default',
+            text: 'Ok',
+            click(e) {
+              invalidQuoteModal.dismiss(e);
+            }
+          }]
+        }
+      }, 'modal-danger');
+    },
+    userStoryStockM() {
+      var userStoryStockM;
+      userStoryStockM = openModal({
+        modal: {
+          dismissable: true,
+          title: 'User Story',
+          html:`<ul>
+                <li>I can view a graph displaying the recent trend lines for each added stock.</li>
+                <li>I can add new stocks by their symbol name.</li>
+                <li>I can remove stocks.</li>
+                <li>I can see changes in real-time when any other user adds or removes a stock. For this you will need to use Web Sockets.</li>
+                </ul>`,
+          buttons: [{
+            classes: 'btn-default',
+            text: 'Ok',
+            click(e) {
+              userStoryStockM.dismiss(e);
+            }
+          }]
+        }
+      }, 'modal-info');
     }
+
+
   };
 }
 

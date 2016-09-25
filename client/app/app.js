@@ -12,10 +12,10 @@ import uiBootstrap from 'angular-ui-bootstrap';
 // import ngMessages from 'angular-messages';
 // import ngValidationMatch from 'angular-validation-match';
 
-
 import {
   routeConfig
-} from './app.config';
+}
+from './app.config';
 
 import _Auth from '../components/auth/auth.module';
 import ModalService from '../components/modal/modal.service';
@@ -36,17 +36,29 @@ import nl from './nightLifeApp/nl.component';
 import stockM from './stockMarket/stockM.component';
 import './app.scss';
 
-angular.module('camperFullStackProjectsApp', [ngCookies, ngResource, ngSanitize, 'btford.socket-io',
-    ngRoute, uiBootstrap, _Auth, ModalService, angularAria, angularAnimate, angularMaterial, account, admin, navbar, footer, main, vote, poll, nl, stockM, constants, socket, util
+angular.module('camperFullStackProjectsApp', [ngCookies,
+                ngResource,
+                ngSanitize,
+                'btford.socket-io',
+                ngRoute,
+                uiBootstrap,
+                _Auth,
+                ModalService,
+                angularAria,
+                angularAnimate,
+                angularMaterial,
+                account,
+                admin,
+                navbar, footer, main, vote, poll, nl, stockM, constants, socket, util
   ])
   .config(routeConfig)
-  .run(function($rootScope, $location, Auth) {
+  .run(function ($rootScope, $location, Auth) {
     'ngInject';
     // Redirect to login if route requires auth and you're not logged in
 
-    $rootScope.$on('$stateChangeStart', function(event, next) {
-      Auth.isLoggedIn(function(loggedIn) {
-        if(next.authenticate && !loggedIn) {
+    $rootScope.$on('$stateChangeStart', function (event, next) {
+      Auth.isLoggedIn(function (loggedIn) {
+        if (next.authenticate && !loggedIn) {
           //$location.path('/login');
           $location.path('/');
         }

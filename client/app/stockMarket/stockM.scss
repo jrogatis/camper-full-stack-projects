@@ -5,13 +5,15 @@ div#stockMBodySup {
   padding-top: 20px;
   background-color: $stockMBackGroundColor;
   color: $stockMFontColor;
-
-  div#stockMGraph{
-    background-color:$stockMBackGroundColor;
-    nvd3{
-      background-color: $stockMBackGroundColor;
+  div#stockMGraph {
+    background-color: $stockMBackGroundColor;
+    md-whiteframe {
+      margin-right: 20px;
+      margin-bottom: 20px;
+      nvd3 {
+        background-color: $stockMBackGroundColor;
+      }
     }
-
   }
   div#stockMitems {
     form {
@@ -21,8 +23,8 @@ div#stockMBodySup {
         }
         div.md-errors-spacer {
           max-height: 0px;
-           min-height: 0px;
-      }
+          min-height: 0px;
+        }
       }
     }
     md-input-container.md-default-theme label,
@@ -32,9 +34,7 @@ div#stockMBodySup {
       //font-size: 15px;
       color: $stockMFontColor;
       border-bottom-color: $stockMFontColor;
-      .md-input-focused {
-
-      }
+      .md-input-focused {}
     }
     div div button.md-raised.md-default.md-primary.md-button.md-default-theme.md-ink-ripple {
       background-color: white;
@@ -43,11 +43,10 @@ div#stockMBodySup {
       }
     }
     md-content#StockListContent {
-       border-radius: 0.5em;
+      border-radius: 0.5em;
       md-list {
         max-height: calc(100vh - 176px);
         overflow-y: scroll;
-
         // height: 300px;
         md-list-item {
           border-radius: 0.5em;
@@ -63,7 +62,6 @@ div#stockMBodySup {
           div button {
             padding-right: 5px;
           }
-
           div#text {
             h3#ID {
               margin-top: 0px;

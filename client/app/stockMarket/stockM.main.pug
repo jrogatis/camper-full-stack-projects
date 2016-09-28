@@ -2,23 +2,26 @@ div#stockMBodySup(md-theme="default")
   #nlContainer.container
     div#stockMBody(layout="row", layout-xs="column")
       div#stockMGraph(flex="85" layout="column", flex-xs="100")
-        nvd3.with-3d-shadow.with-transitions(options = "$ctrl.chartOptions" , data ="$ctrl.data", class="")
+        md-whiteframe.md-whiteframe-4dp
+          nvd3.with-3d-shadow.with-transitions(options="$ctrl.chartOptions" , data="$ctrl.data", api="$ctrl.api")
       div#stockMitems(flex="15" layout="column", flex-xs="100")
+        md-input-container
+          label Period
+          md-select(ng-model="$ctrl.monthsFromNow", ng-change="$ctrl.loadDataToDisplay()")
+            md-option(ng-repeat="item in $ctrl.periods" ng-value="item.months") {{item.months}}
         form(layout layout-align="center")
           div(layout="row" flex)
             md-input-container.md-icon-float.md-block.md-title(flex)
               label.Search add stocks
-              input(type="text", ng-model='$ctrl.stockAdd' , maxlength= '4', uppercase-only, ng-keypress ='$ctrl.CaptEnter($event)')
+              input(type="text", ng-model='$ctrl.stockAdd' , maxlength= '5', uppercase-only, ng-keypress ='$ctrl.CaptEnter($event)')
             div
               md-button.md-raised.md-default.md-primary.md-icon-button(ng-Click ='$ctrl.addStock()', aria-label='searchForm')
                  i.fa.fa-search.fa-fw
         md-content#StockListContent(ng-show= "$ctrl.stockList")
           md-list(flex)#businessesList
-            md-list-item.md-3-line.md-long-text(ng-animate="'animate'" ng-repeat='item in $ctrl.stockList')
-              div#text(layout="column")
-                h3#ID {{item.ID}}
-                p {{item.DESC}}
-              button.close.md-secondary( ng-click='$ctrl.deleteStock(item._id)', type='button')
+            md-list-item(ng-animate="'animate'" ng-repeat='item in $ctrl.stockList')
+              h3#ID {{item.ID}}
+              button.close.md-secondary( ng-click='$ctrl.deleteStock(item)', type='button')
                 span.glyphicon.glyphicon-trash.pull-right
             md-divider.md-inset
 

@@ -17,14 +17,13 @@ export class stockMController {
     this.Modal = Modal;
     this.data = [];
     this.monthsFromNow = 17;
-    //this.api;
     this.periods = (`17 12 6`).split(' ').map( period =>{ return { months: period }; });
 
     $scope.$on('$destroy', function () {
       this.socket.unsyncUpdates('stocks');
     });
   }
-
+ 
   formatDate(date) {
     var d = new Date(date),
         month = '' + (d.getMonth() + 1),
@@ -36,50 +35,13 @@ export class stockMController {
 
     return [year, month, day].join('-');
   }
-
+  
   endDateToQuery() {
     const date = new Date();
     //console.log(this.formatDate(date));
     return this.formatDate(date);
-  }
-
-  loadSocket() {
-     this.socket.syncUpdates('stocks', this.stockList, (event, item) => {
-        console.log(event);
-        switch (event) {
-          case 'deleted':
-            console.log('no deleted', item);
-            console.log(item.ID);
-             //let series = _.find(this.data, {key: item.ID})
-             let newData =[]
-             this.data.map(series => {
-               console.log('series', series.key, item.ID)
-                if(series.key != item.ID ) {
-                 newData.push({key:series.ID, values: series.values})
-               }
-              }
-            )
-            this.api.updateWithData(newData);
-            break;
-          case 'created':
-             this.$http.get(this.urlForYahooQuery(item.ID))
-              .success( ret => {
-                this.addSeries(item.ID, ret.query.results.quote);
-                this.stockAdd = '';
-              })
-             break;
-          default:
-            console.log('no default', event)
-        }
-      })
-  }
-
-  deleteSeries(item) {
-    let series = _.find(this.data,{key: item.ID})
-
-
-  }
-
+  } 
+  
   startDateToQuery(){
     let d = new Date();
     d = d.setMonth(d.getMonth() - this.monthsFromNow);
@@ -87,21 +49,34 @@ export class stockMController {
     //console.log(d)
     return d;
   }
-
   $onInit() {
       //this.Modal.userStoryStockM();
       this.loadDataToDisplay();
-
+      this.socket.syncUpdates('stocks', this.stockList, (event, item) => {
+        console.log(event);
+        switch (event) {
+          case 'deleted':
+              console.log('no deleted', event, item);
+            this.loadDataToDisplay();
+            break; 
+          case 'created':
+             console.log('no created', event);
+            
+        default:
+         console.log('no default', event)
+        }
+      }
+    )
   }
-
+    
   customSortDate(a, b) {
     return new Date(a.Date).getTime() - new Date(b.Date).getTime();
-}
-
+} 
+  
   custmSortQuotes(a,b) {
   return b.Close - a.Close ;
-}
-
+}  
+  
   addSeries(key, values) {
     let stockData = {};
     stockData.key = key;
@@ -110,9 +85,9 @@ export class stockMController {
     values.map(quote => {
       stockData.values.push(quote);
     })
-     this.data.push(stockData);
-
+     this.data.push(stockData);    
   }
+
 
   loadDataToDisplay() {
      this.data = [];
@@ -120,17 +95,16 @@ export class stockMController {
        .success(response => {
           //console.log(response);
           this.stockList = response;
-          this.loadSocket();
           response.map(item => {
           this.$http.get(this.urlForYahooQuery(item.ID))
             .success( ret => {
               this.addSeries(item.ID, ret.query.results.quote);
             }
-          )
+          )  
         })
     })
   }
-
+                         
   CaptEnter(event) {
     if (event.which === 13) {
       this.addStock();
@@ -138,33 +112,43 @@ export class stockMController {
   }
 
   addStock() {
-    //console.log(this.stockList);
+    console.log(this.stockList);
     //first check if the Stock code exists od the local database
     //avoding duplicity if exists is alreredy loaded on graph
-    if (!_.find(this.stockList, {
-        ID: this.stockAdd
-      })) {
-      this.$http.get(this.urlForYahooQuery(this.stockAdd))
-        .success(data => {
-          //check the return for a valid quotes...
-          // that means more the 0 on count
-          if (data.query.count === 0) {
-            this.Modal.invalidQuote();
-          } else {
-            //console.log(this.stockList);
-            //its valid then add to local db
-            this.$http.post('/api/stocks', {
-                ID: this.stockAdd,
-                DESC: ''
-              })
-
-          }
+    console.log('usando', _.find(this.stockList,{ID:this.stockAdd}));
+    if (this.stockAdd) {
+      this.$http.get(`/api/stocks/${this.stockAdd}`)
+        .success(result => {
+          this.stockAdd = '';
+        })
+        .catch(error => {
+          //if not exists then check for know if its a valid code
+          //fist querying the yahoo db
+          this.$http.get(this.urlForYahooQuery(this.stockAdd))
+            .success(data => {
+              //check the return for a valid quotes...
+              // that means more the 0 on count
+              if (data.query.count === 0) {
+                this.Modal.invalidQuote();
+              } else {
+                //its valid then add to local db
+                this.$http.post('/api/stocks', {
+                    ID: this.stockAdd,
+                    DESC: ''
+                  })
+                  /*.success(ret => {
+                    console.log('no success', data, ret);
+                    this.addSeries(ret.ID, data.query.results.quote);
+                    this.stockAdd = '';
+                  })*/
+              }
+            })
         })
     }
   }
-
+  
   deleteStock(item) {
-    this.$http.delete(`/api/stocks/${item._id}`)
+    this.$http.delete(`/api/stocks/${item._id}`)   
   }
 
   //Quanti api iKjZVpmzmah-k5o1zDKS
@@ -177,7 +161,7 @@ export class stockMController {
     //console.log('completeUrl', decodeURIComponent(completeUrl));
     return completeUrl;
   }
-
+  
   chartOptions = {
     chart: {
       type: 'lineChart',
@@ -188,14 +172,14 @@ export class stockMController {
         bottom: 60,
         left: 40
       },
-
-
+      
+    
       x: d => d3.time.format('%Y-%m-%d').parse(d['Date']),
       y: d => d['Close'],
-
+      
       noData: 'Loading Data from Yahoo finance API',
       interactive: true,
-      tooltips: true,
+      tooltips: true, 
       color: d3.scale.category10().range(),
       duration: 300,
       useInteractiveGuideline: true,
@@ -203,12 +187,12 @@ export class stockMController {
       //forceY: [0, this.MaxValueY],
 
       xAxis: {
-        axisLabel: "Dates",
+        axisLabel: "Dates",      
         tickFormat: d => d3.time.format('%m/%d/%y')(new Date(d)),
         showMaxMin: false
-
+        
       },
-
+      
       yAxis: {
        showMaxMin: false,
        "margin": {
@@ -222,18 +206,7 @@ export class stockMController {
       deepWatchData: true
     }
   }
-
-  chartConfig = {
-    visible: true, // default: true
-    extended: true, // default: false
-    disabled: false, // default: false
-    refreshDataOnly: true, // default: true
-    deepWatchOptions: true, // default: true
-    deepWatchData: true, // default: true
-    deepWatchDataDepth: 2, // default: 2
-    debounce: 10 // default: 10
-}
-
+  
 }
 
 export default angular.module('camperFullStackProjectsApp.stockm', [ngRoute, ModalService, nvd3])

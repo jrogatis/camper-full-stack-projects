@@ -32,7 +32,7 @@ function Socket(socketFactory) {
      */
     syncUpdates(modelName, array, cb) {
       cb = cb || angular.noop;
-
+      console.log('no sync', array);
       /**
        * Syncs item creation/updates on 'model:save'
        */

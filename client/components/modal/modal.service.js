@@ -119,7 +119,7 @@ export function Modal($rootScope, $uibModal) {
             classes: 'btn-default',
             text: 'Ok',
             click(e) {
-              invalidQuoteModal.dismiss(e);
+              invalidQuoteModal.dismiss();
             }
           }]
         }

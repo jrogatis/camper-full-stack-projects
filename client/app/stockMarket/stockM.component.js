@@ -44,28 +44,26 @@ export class stockMController {
   }
 
   loadSocket() {
-     this.socket.syncUpdates('stocks', this.stockList, (event, item) => {
-        console.log(event);
+     this.socket.syncUpdates('stocks', this.stockList, (event, item, array) => {
         switch (event) {
           case 'deleted':
-            console.log('no deleted', item);
-            console.log(item.ID);
-             //let series = _.find(this.data, {key: item.ID})
              let newData =[]
-             this.data.map(series => {
-               console.log('series', series.key, item.ID)
-                if(series.key != item.ID ) {
-                 newData.push({key:series.ID, values: series.values})
+             this.data.map(dataSeries => {
+               console.log('no map', dataSeries, item.ID)
+                if(dataSeries.key != item.ID ) {
+                 newData.push({key:dataSeries.key, values: dataSeries.values})
                }
               }
             )
             this.api.updateWithData(newData);
+            this.api.refresh();
             break;
           case 'created':
+             this.stockAdd = '';
              this.$http.get(this.urlForYahooQuery(item.ID))
               .success( ret => {
                 this.addSeries(item.ID, ret.query.results.quote);
-                this.stockAdd = '';
+
               })
              break;
           default:
@@ -160,6 +158,7 @@ export class stockMController {
 
           }
         })
+        .catch(error => console.log(error))
     }
   }
 

@@ -6,5 +6,5 @@ export default function routes($routeProvider) {
   $routeProvider
     .when('/stockM', {
       template: '<stockM></stockM>'
-    })
+    });
 }

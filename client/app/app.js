@@ -8,6 +8,7 @@ import ngSanitize from 'angular-sanitize';
 import 'angular-socket-io';
 const ngRoute = require('angular-route');
 import uiBootstrap from 'angular-ui-bootstrap';
+import d3 from 'd3';
 
 // import ngMessages from 'angular-messages';
 // import ngValidationMatch from 'angular-validation-match';
@@ -52,11 +53,11 @@ angular.module('camperFullStackProjectsApp', [ngCookies,
                 navbar, footer, main, vote, poll, nl, stockM, constants, socket, util
   ])
   .config(routeConfig)
-  .run(function ($rootScope, $location, Auth) {
+  .run(function($rootScope, $location, Auth) {
     'ngInject';
     // Redirect to login if route requires auth and you're not logged in
 
-    $rootScope.$on('$stateChangeStart', function (event, next) {
+    $rootScope.$on('$stateChangeStart', function(event, next) {
       /*Auth.isLoggedIn(function (loggedIn) {
         if (next.authenticate && !loggedIn) {
           //$location.path('/login');

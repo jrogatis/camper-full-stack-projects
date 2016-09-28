@@ -7,7 +7,7 @@ export default function routes($routeProvider) {
     .when('/nl', {
       template: '<nl></nl>'
     })
-    .when('/nl/:searchString' , {
+    .when('/nl/:searchString', {
       template: '<nl></nl>'
     });
 }

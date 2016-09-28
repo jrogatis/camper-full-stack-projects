@@ -4,7 +4,7 @@ import routing from './stockM.routes';
 import ModalService from '../../components/modal/modal.service';
 import nvd3 from 'angular-nvd3';
 import _ from 'lodash';
-
+import d3 from 'd3';
 
 export class stockMController {
   /*@ngInject*/
@@ -17,24 +17,25 @@ export class stockMController {
     this.Modal = Modal;
     this.data = [];
     this.monthsFromNow = 17;
-    //this.api;
-    this.periods = (`17 12 6`).split(' ').map( period =>{ return { months: period }; });
+    this.periods = ('17 12 6').split(' ').map(period => {
+      return { months: period };
+    });
 
-    $scope.$on('$destroy', function () {
-      this.socket.unsyncUpdates('stocks');
+    $scope.$on('$destroy', function() {
+      socket.unsyncUpdates('stocks');
     });
   }
 
   formatDate(date) {
-    var d = new Date(date),
-        month = '' + (d.getMonth() + 1),
-        day = '' + d.getDate(),
-        year = d.getFullYear();
+    const d = new Date(date);
+    let myMonth = ` ${(d.getMonth() + 1)}`;
+    let myDay = ` ${d.getDate()}`;
+    const year = d.getFullYear();
 
-    if (month.length < 2) month = '0' + month;
-    if (day.length < 2) day = '0' + day;
+    if(myMonth.length < 2) myMonth = `0${myMonth}`;
+    if(myDay.length < 2) myDay = `0${myDay}`;
 
-    return [year, month, day].join('-');
+    return [year, myMonth, myDay].join('-');
   }
 
   endDateToQuery() {
@@ -44,93 +45,84 @@ export class stockMController {
   }
 
   loadSocket() {
-     this.socket.syncUpdates('stocks', this.stockList, (event, item, array) => {
-        switch (event) {
-          case 'deleted':
-             let newData =[]
-             this.data.map(dataSeries => {
-               console.log('no map', dataSeries, item.ID)
-                if(dataSeries.key != item.ID ) {
-                 newData.push({key:dataSeries.key, values: dataSeries.values})
-               }
-              }
-            )
-            this.api.updateWithData(newData);
-            this.api.refresh();
-            break;
-          case 'created':
-             this.stockAdd = '';
-             this.$http.get(this.urlForYahooQuery(item.ID))
-              .success( ret => {
-                this.addSeries(item.ID, ret.query.results.quote);
-
-              })
-             break;
-          default:
-            console.log('no default', event)
+    this.socket.syncUpdates('stocks', this.stockList, (event, item) => {
+      switch (event) {
+      case 'deleted':
+        let newData = [];
+        this.data.map(dataSeries => {
+          if(dataSeries.key != item.ID) {
+            newData.push({key: dataSeries.key, values: dataSeries.values});
+          }
         }
-      })
+        );
+        this.api.updateWithData(newData);
+        this.api.refresh();
+        break;
+      case 'created':
+        this.stockAdd = '';
+        this.$http.get(this.urlForYahooQuery(item.ID))
+          .success(ret => {
+            this.addSeries(item.ID, ret.query.results.quote);
+          });
+        break;
+      default:
+        console.log('no default', event);
+      }
+    });
+    return true;
   }
 
-  deleteSeries(item) {
-    let series = _.find(this.data,{key: item.ID})
-
-
-  }
-
-  startDateToQuery(){
+  startDateToQuery() {
     let d = new Date();
     d = d.setMonth(d.getMonth() - this.monthsFromNow);
     d = this.formatDate(d);
-    //console.log(d)
     return d;
   }
 
   $onInit() {
-      //this.Modal.userStoryStockM();
-      this.loadDataToDisplay();
-
+    this.Modal.userStoryStockM();
+    this.loadDataToDisplay();
   }
 
   customSortDate(a, b) {
     return new Date(a.Date).getTime() - new Date(b.Date).getTime();
-}
+  }
 
-  custmSortQuotes(a,b) {
-  return b.Close - a.Close ;
-}
+  custmSortQuotes(a, b) {
+    return b.Close - a.Close;
+  }
 
   addSeries(key, values) {
     let stockData = {};
     stockData.key = key;
     stockData.values = [];
-    let newValues =  values.sort(this.customSortDate);
+    values.sort(this.customSortDate);
     values.map(quote => {
       stockData.values.push(quote);
-    })
-     this.data.push(stockData);
-
+    });
+    this.data.push(stockData);
+    return true;
   }
 
   loadDataToDisplay() {
-     this.data = [];
-     this.$http.get('/api/stocks')
-       .success(response => {
-          //console.log(response);
-          this.stockList = response;
-          this.loadSocket();
-          response.map(item => {
+    this.data = [];
+    this.$http.get('/api/stocks')
+      .success(response => {
+        this.stockList = response;
+        this.loadSocket();
+        response.map(item => {
           this.$http.get(this.urlForYahooQuery(item.ID))
-            .success( ret => {
+            .success(ret => {
               this.addSeries(item.ID, ret.query.results.quote);
             }
-          )
-        })
-    })
+          );
+        });
+      });
+    return true;
   }
 
   CaptEnter(event) {
-    if (event.which === 13) {
+    if(event.which === 13) {
       this.addStock();
     }
   }
@@ -139,41 +131,40 @@ export class stockMController {
     //console.log(this.stockList);
     //first check if the Stock code exists od the local database
     //avoding duplicity if exists is alreredy loaded on graph
-    if (!_.find(this.stockList, {
-        ID: this.stockAdd
-      })) {
+    if(!_.find(this.stockList, {
+      ID: this.stockAdd
+    })
+      ) {
       this.$http.get(this.urlForYahooQuery(this.stockAdd))
         .success(data => {
           //check the return for a valid quotes...
           // that means more the 0 on count
-          if (data.query.count === 0) {
+          if(data.query.count === 0) {
             this.Modal.invalidQuote();
           } else {
             //console.log(this.stockList);
             //its valid then add to local db
             this.$http.post('/api/stocks', {
-                ID: this.stockAdd,
-                DESC: ''
-              })
-
+              ID: this.stockAdd,
+              DESC: ''
+            });
           }
         })
-        .catch(error => console.log(error))
+        .catch(error => console.log(error));
     }
   }
 
   deleteStock(item) {
-    this.$http.delete(`/api/stocks/${item._id}`)
+    this.$http.delete(`/api/stocks/${item._id}`);
   }
 
   //Quanti api iKjZVpmzmah-k5o1zDKS
   //startDate = '2015-01-01', endDate = '2016-01-08'
-  urlForYahooQuery (stockIDs) {
-    const baseUrl = 'http://query.yahooapis.com/v1/public/yql?q=';
+  urlForYahooQuery(stockIDs) {
+    const baseUrl = 'https://query.yahooapis.com/v1/public/yql?q=';
     const url = encodeURIComponent(`select Date,Close from yahoo.finance.historicaldata where symbol in ("${stockIDs}") and startDate = "${this.startDateToQuery()}" and endDate = "${this.endDateToQuery()}"`);
     const tailUrl = '&format=json&diagnostics=true&env=store://datatables.org/alltableswithkeys&callback=';
     const completeUrl = baseUrl + url + tailUrl;
-    //console.log('completeUrl', decodeURIComponent(completeUrl));
     return completeUrl;
   }
 
@@ -188,9 +179,8 @@ export class stockMController {
         left: 40
       },
 
-
-      x: d => d3.time.format('%Y-%m-%d').parse(d['Date']),
-      y: d => d['Close'],
+      x: d => d3.time.format('%Y-%m-%d').parse(d.Date),
+      y: d => d.Close,
 
       noData: 'Loading Data from Yahoo finance API',
       interactive: true,
@@ -199,40 +189,27 @@ export class stockMController {
       duration: 300,
       useInteractiveGuideline: true,
       clipVoronoi: false,
-      //forceY: [0, this.MaxValueY],
 
       xAxis: {
-        axisLabel: "Dates",
+        axisLabel: 'Dates',
         tickFormat: d => d3.time.format('%m/%d/%y')(new Date(d)),
         showMaxMin: false
 
       },
 
       yAxis: {
-       showMaxMin: false,
-       "margin": {
-         "top": 0,
-         "right": 0,
-         "bottom": 0,
-         "left": 0
-       },
+        showMaxMin: false,
+        margin: {
+          top: 0,
+          right: 0,
+          bottom: 0,
+          left: 0
+        },
       },
-      yDomain: [0,1000],
+      yDomain: [0, 1000],
       deepWatchData: true
     }
   }
-
-  chartConfig = {
-    visible: true, // default: true
-    extended: true, // default: false
-    disabled: false, // default: false
-    refreshDataOnly: true, // default: true
-    deepWatchOptions: true, // default: true
-    deepWatchData: true, // default: true
-    deepWatchDataDepth: 2, // default: 2
-    debounce: 10 // default: 10
-}
-
 }
 
 export default angular.module('camperFullStackProjectsApp.stockm', [ngRoute, ModalService, nvd3])
@@ -254,18 +231,18 @@ export default angular.module('camperFullStackProjectsApp.stockm', [ngRoute, Mod
             //console.log(e);
             var char = e.char || String.fromCharCode(e.charCode);
             //console.log(char);
-            if (!/^[A-Z0-9]$/i.test(char)) {
+            if(!/^[A-Z0-9]$/i.test(char)) {
               e.preventDefault();
               return false;
             }
           });
 
           function parser(value) {
-            if (ctrl.$isEmpty(value)) {
+            if(ctrl.$isEmpty(value)) {
               return value;
             }
             var formatedValue = value.toUpperCase();
-            if (ctrl.$viewValue !== formatedValue) {
+            if(ctrl.$viewValue !== formatedValue) {
               ctrl.$setViewValue(formatedValue);
               ctrl.$render();
             }
@@ -273,7 +250,7 @@ export default angular.module('camperFullStackProjectsApp.stockm', [ngRoute, Mod
           }
 
           function formatter(value) {
-            if (ctrl.$isEmpty(value)) {
+            if(ctrl.$isEmpty(value)) {
               return value;
             }
             return value.toUpperCase();
@@ -284,5 +261,5 @@ export default angular.module('camperFullStackProjectsApp.stockm', [ngRoute, Mod
         }
       };
     }
-])
+  ])
   .name;

@@ -1,0 +1,95 @@
+#banner.nl.hero-unit {
+  border-bottom: none;
+  margin-top: -20px;
+  position: relative;
+  padding: 30px 15px;
+  color: #F5F5F5;
+  text-align: center;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+  background: #6343b9;
+  .container {
+    h1 {
+      margin-top: 0px;
+      font-size: 60px;
+      line-height: 1;
+      letter-spacing: -1px;
+    }
+    span i {
+      font-size: 2em;
+    }
+  }
+}
+
+div#nlBody {
+  min-height: calc(100vh - 176px);
+  background-color: #6343b9;
+  color: #F5F5F5;
+  h3 {
+    padding-bottom: 10px;
+  }
+  div#userStory {
+    div#divider {
+      border-right-width: 1px;
+      border-right-color: #004eff;
+      border-right-style: solid;
+      padding-right: 10px;
+    }
+  }
+  div#listVenues {
+    #listContent {
+      background-color: #6343b9;
+    }
+    form {
+      div md-input-container label {
+        color: white;
+      }
+    }
+    md-input-container.md-default-theme label,
+    md-input-container label,
+    md-input-container.md-default-theme .md-placeholder,
+    md-input-container .md-placeholder {
+      color: white;
+      border-bottom-color: white;
+    }
+    .fa.fa-spinner.fa-spin {
+      font-size: 48px;
+      color: white;
+    }
+    md-list {
+      max-height: calc(100vh - 176px);
+      overflow-y: scroll;
+      // height: 300px;
+      md-list-item {
+        margin-left: 40px;
+        margin-right: 40px;
+        padding: 10px 0px 10px 10px;
+        border-bottom: 1px dotted black;
+        opacity: .9;
+        -webkit-transition: all 0.3s ease-out;
+        -moz-transition: all 0.3s ease-out;
+        -o-transition: all 0.3s ease-out;
+        transition: all 0.3s ease-out;
+        div#image {
+          margin-right: 20px;
+          img#stars {
+            margin-bottom: 7px;
+          }
+        }
+        div#text {
+          h3#name {
+            margin-top: 0px;
+            color: white;
+          }
+        }
+      }
+      md-list-item:hover {
+        background: #544bc4;
+        opacity: 1;
+        -webkit-transform: scale(1.1);
+        -moz-transform: scale(1.1);
+        -ms-transform: scale(1.1);
+        transform: scale(1.1);
+      }
+    }
+  }
+}

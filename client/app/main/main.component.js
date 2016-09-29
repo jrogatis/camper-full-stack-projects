@@ -3,12 +3,7 @@ const ngRoute = require('angular-route');
 import routing from './main.routes';
 
 export class MainController {
-
-  /*@ngInject*/
-  constructor() {
-
-  }
-
+/*@ngInject*/
 }
 
 export default angular.module('camperFullStackProjectsApp.main', [])

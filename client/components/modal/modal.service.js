@@ -1,8 +1,9 @@
 'use strict';
 
 import angular from 'angular';
+import ngMaterial from 'angular-material';
 
-export function Modal($rootScope, $uibModal) {
+export function Modal($rootScope, $uibModal, ngMaterial) {
   /**
    * Opens a modal
    * @param  {Object} scope      - an object to be merged with modal's scope
@@ -147,13 +148,11 @@ export function Modal($rootScope, $uibModal) {
         }
       }, 'modal-info');
     }
-
-
   };
 }
 
 Modal.$inject = ['$rootScope', '$uibModal'];
 
-export default angular.module('camperFullStackProjectsApp.Modal', [])
+export default angular.module('camperFullStackProjectsApp.Modal', [ngMaterial])
   .factory('Modal', Modal)
   .name;

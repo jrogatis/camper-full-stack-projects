@@ -1,0 +1,63 @@
+header#banner.nl.hero-unit(layout="row", layout-xs="column")
+  .container
+    h1 Books Trading Club!
+    h3 Hy {{$ctrl.CurUser.name}} thats your shelf on our library!
+    span
+      i.fa.fa-book.fa-fw
+div#shelfBodySup(layout="row", layout-xs="column", md-theme="default")
+  #shelfContainer.container
+    div#shelfBody(layout="row", layout-xs="column")
+      div#pendingTranding(flex="25", flex-xs="100")
+        h3 The list of pending requests and offers to you!
+      div#listUserBooks(flex="75" layout="column", flex-xs="100")
+        form(layout layout-align="center")
+          div(layout="row" flex)
+            md-input-container.md-icon-float.md-block.md-title(flex)
+              label.Search Whant to offer a Book ? (Search by Title)
+              input(type="text", ng-model='$ctrl.titleToSearch' , ng-keypress ='$ctrl.CaptEnter($event)', aria-label='searchForm')
+            div
+              md-button.md-raised.md-default.md-primary.md-icon-button(ng-Click ='$ctrl.searchBook($event)', aria-label='searchForm')
+                i.fa.fa-search.fa-fw
+        div#currentUserBooks
+          md-list
+            md-list-item(ng-repeat='book in $ctrl.userBooks')
+              md-content.md-padding( layout-xs="column," layout="row", flex )
+                div(flex-xs flex-gt-xs="100" layout="column")
+                  md-card
+                    md-card-title
+                      md-card-title-media
+                        div.md-media-lg.card-media
+                          img(ng-src='{{book.imgUrl}}')
+                      md-card-title-text
+                        span.md-headline {{book.title}}
+                        span.md-subhead {{book.author}}
+                    md-card-actions(layout="row" layout-align="end center")
+                      md-button.md-icon-button
+                         span.glyphicon.glyphicon-trash.pull-right
+
+
+
+script(type="text/ng-template" id="selectBock.tmpl.pug")
+  md-dialog(aria-label="Search Books")
+    form(ng-cloak)
+      md-toolbar
+        div.md-toolbar-tools
+          h2 Select the book that you wish to offer!
+          span(flex)
+          md-button.md-icon-button(ng-click="cancel()") x
+      md-dialog-content
+        md-content#StockListContent()
+          md-list#dialogBookList(flex)
+            md-list-item.md-2-line(ng-animate='animate' ng-repeat='item in booksJson', layout="row", ng-click="answer($index)")
+              img#bookCoverThumbnail.md-avatar(ng-src='{{item.volumeInfo.imageLinks.smallThumbnail}}')
+              div.md-list-item-text(layout="column" alig)
+                h3 {{item.volumeInfo.title}}
+                h4 {{item.volumeInfo.authors[0]}}
+              md-divider.md-inset(ng-if="!$last")
+      md-dialog-actions(layout="row")
+        span(flex)
+        md-button(ng-click="cancel()") Cancel
+        md-button(ng-click="answer('useful')") Select
+
+
+

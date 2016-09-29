@@ -35,6 +35,8 @@ import vote from './votingApp/vote.component';
 import poll from './VotingApp/poll/poll.component';
 import nl from './nightLifeApp/nl.component';
 import stockM from './stockMarket/stockM.component';
+import books from './books/books.component';
+import shelf from './userShelf/shelf.component';
 import './app.scss';
 
 angular.module('camperFullStackProjectsApp', [ngCookies,
@@ -50,7 +52,12 @@ angular.module('camperFullStackProjectsApp', [ngCookies,
                 angularMaterial,
                 account,
                 admin,
-                navbar, footer, main, vote, poll, nl, stockM, constants, socket, util
+                navbar,
+                footer,
+                main,
+                vote,
+                poll,
+                nl, stockM, books, shelf, constants, socket, util
   ])
   .config(routeConfig)
   .run(function($rootScope, $location, Auth) {

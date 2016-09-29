@@ -23,10 +23,12 @@ $fa-font-path: '/assets/fonts/font-awesome/';
 // Component styles are injected through gulp
 /* inject:scss */
 @import 'admin/admin';
+@import 'books/books';
 @import 'main/main';
 @import 'nightLifeApp/nl';
 @import 'stockMarket/nvd3';
 @import 'stockMarket/stockM';
+@import 'userShelf/shelf';
 @import 'votingApp/poll/poll';
 @import 'votingApp/vote';
 @import '../components/footer/footer';

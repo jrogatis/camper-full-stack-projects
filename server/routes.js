@@ -15,6 +15,7 @@ export default function(app) {
   app.use('/api/nl', require('./api/nl'));
   app.use('/api/yelp', require('./api/yelp'));
   app.use('/api/stocks', require('./api/stocks'));
+  app.use('/api/books', require('./api/books'));
 
   app.use('/auth', require('./auth').default);
 

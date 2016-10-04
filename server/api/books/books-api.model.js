@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 
 var BooksSchema = new mongoose.Schema({
   userID: String,
+  userName: String,
   booksOwned: [{
     googleID: String,
     title: String,
@@ -10,10 +11,10 @@ var BooksSchema = new mongoose.Schema({
     imgUrl: String
   }],
   pendingTradingRequests: [
-    [{bookOfferID: String, bookRequestedID: String, tradeAccepted: Boolean}]
+    { bookOfferID: String, bookRequestedID: String, tradeAccepted: Date}
   ],
   pendingTradingOffers: [
-    {bookRequestedID: String, bookOfferID: String, tradeAccepted: Boolean}
+    { bookRequestedID: String, bookOfferID: String, tradeAccepted: Date}
   ]
 
 });

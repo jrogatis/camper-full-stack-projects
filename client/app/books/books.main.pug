@@ -1,11 +1,11 @@
-header#banner.nl.hero-unit(layout="row", layout-xs="column")
+header#banner.books.hero-unit(layout="row", layout-xs="column")
   .container
     h1 Books Trading Club!
     span
       i.fa.fa-book.fa-fw
-div#nlBody(md-theme="default")
-  #nlContainer.container
-    div#nlBody(layout="row", layout-xs="column")
+div#booksBody(md-theme="default")
+  #booksContainer.container
+    div#booksBody(layout="row", layout-xs="column")
       div#userStory(flex="25", flex-xs="100")
         h3 User Story
         div#divider
@@ -17,3 +17,51 @@ div#nlBody(md-theme="default")
 
       div#listBooks(flex="75" layout="column", flex-xs="100")
         a(href='/shelf') shelf
+        md-grid-list(md-cols="1",
+                    md-cols-sm="2",
+                    md-cols-md="4",
+                    md-cols-gt-md="6",
+                    md-row-height-gt-md="1:1",
+                    md-row-height="1:1",
+                    md-gutter="12px",
+                    md-gutter-gt-sm="8px" )
+          md-grid-tile.tile.background(ng-repeat="book in $ctrl.allBooks",
+                  md-rowspan="2",
+                  md-colspan="2",
+                  md-colspan-sm="1",
+                  md-colspan-xs="1",
+                  style = "{left: calc(((50% - 4px) + 8px) * 0); width: calc(((50% - 4px) * 1) + 0px); padding-top: calc(((37.5% - 4px) * 2) + 8px); margin-top: calc(((37.5% - 4px) + 8px) * 0);}")
+            div.md-media-xs.card-media.md-padding
+              img(ng-src='{{book.imgUrl}}')
+            div(layout="column", layout-align="center center")
+              h4 {{book.title}}
+              h5 {{book.author}}
+
+            md-grid-tile-footer
+              md-button.md-icon-button(aria-label='list' ng-click="$ctrl.proposeTrade($event, $index)")
+                span.glyphicon.glyphicon-retweet.pull-right
+
+
+
+script(type="text/ng-template" id="selectBocktoTrade.tmpl.pug")
+  md-dialog(aria-label="Search Books")
+    form(ng-cloak)
+      md-toolbar
+        div.md-toolbar-tools
+          h2 Select the book that you wish to offer!
+          span(flex)
+          md-button.md-icon-button(ng-click="cancel()") x
+      md-dialog-content
+        md-content#StockListContent()
+          md-list#dialogBookList(flex)
+            md-list-item.md-2-line(ng-animate='animate' ng-repeat='item in $ctrl.booksThatUserOwns', layout="row", ng-click="answer($index)")
+              img#bookCoverThumbnail.md-avatar(ng-src='{{item.imgUrl}}')
+              div.md-list-item-text(layout="column" alig)
+                h3 {{item.title}}
+                h4 {{item.authors}}
+              md-divider.md-inset(ng-if="!$last")
+      md-dialog-actions(layout="row")
+        span(flex)
+        md-button(ng-click="cancel()") Cancel
+
+

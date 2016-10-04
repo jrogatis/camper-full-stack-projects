@@ -1,4 +1,4 @@
-header#banner.nl.hero-unit(layout="row", layout-xs="column")
+header#banner.shelf.hero-unit(layout="row", layout-xs="column")
   .container
     h1 Books Trading Club!
     h3 Hy {{$ctrl.CurUser.name}} thats your shelf on our library!
@@ -7,9 +7,70 @@ header#banner.nl.hero-unit(layout="row", layout-xs="column")
 div#shelfBodySup(layout="row", layout-xs="column", md-theme="default")
   #shelfContainer.container
     div#shelfBody(layout="row", layout-xs="column")
-      div#pendingTranding(flex="25", flex-xs="100")
-        h3 The list of pending requests and offers to you!
-      div#listUserBooks(flex="75" layout="column", flex-xs="100")
+      div#pendingTranding.md-padding(flex="35", flex-xs="100")
+        v-accordion#accordionPendingTrades.vAccordion--default(control="accordionPendingTrades")
+          v-pane(id="Offers")
+            v-pane-header(id="Offers-header",  aria-controls="Offers-content")
+              h4 Offers to you
+            v-pane-content(id="Offers-content",  aria-labelledby="Offers-header")
+              md-list
+                md-list-item(ng-repeat="offer in $ctrl.userOffers")
+                  md-content.md-padding( layout-xs="column," layout="row", flex )
+                    div(flex-xs flex-gt-xs="100" layout="column")
+                      md-card
+                        div(flex-xs flex-gt-xs="100" layout="row")
+                          md-card
+                            md-card-title
+                              md-card-title-media
+                                div.md-media-xm.card-media.md-padding
+                                  img(ng-src='{{offer.offerUrl}}', alt='{{offer.offerTitle}}')
+                                md-card-title-text
+                                   span.md-subhead {{offer.offerTitle}}
+                          div#offersMiddle
+                             span.glyphicon.glyphicon-hand-right
+                          md-card
+                            md-card-title
+                              md-card-title-media
+                                div.md-media-xm.card-media.md-padding
+                                  img(ng-src='{{offer.requestedUrl}}')
+                                md-card-title-text
+                                   span.md-subheader {{offer.requestedTitle}}
+                        md-card-actions(layout="row" layout-align="end center")
+                          md-button.md-icon-button(aria-label='list' ng-click="$ctrl.acceptOffer($index)")
+                             span.glyphicon.glyphicon-ok.pull-right
+                          md-button.md-icon-button(aria-label='list' ng-click="$ctrl.negateOffer($index)")
+                             span.glyphicon.glyphicon-remove.pull-right
+          v-pane(id="Requests")
+            v-pane-header(id="Requests-header",  aria-controls="Requests-content")
+              h4 Requests from you
+            v-pane-content(id="Requests-content",  aria-labelledby="Requests-header")
+              md-list
+                md-list-item(ng-repeat="request in $ctrl.userRequests")
+                  md-content.md-padding( layout-xs="column," layout="row", flex )
+                    div(flex-xs flex-gt-xs="100" layout="column")
+                      md-card
+                        div(flex-xs flex-gt-xs="100" layout="row")
+                          md-card
+                            md-card-title
+                              md-card-title-media
+                                div.md-media-xm.card-media.md-padding
+                                  img(ng-src='{{request.offerUrl}}', alt='{{request.offerTitle}}')
+                                md-card-title-text
+                                   span.md-subhead {{request.offerTitle}}
+                          div#offersMiddle
+                             span.glyphicon.glyphicon-hand-left
+                          md-card
+                            md-card-title
+                              md-card-title-media
+                                div.md-media-xm.card-media.md-padding
+                                  img(ng-src='{{request.requestedUrl}}')
+                                md-card-title-text
+                                   span.md-subheader {{request.requestedTitle}}
+                        md-card-actions(layout="row" layout-align="end center")
+                          md-button.md-icon-button(aria-label='list' ng-click="$ctrl.deleteRequest($index)")
+                              span.glyphicon.glyphicon-trash.pull-right
+
+      div#listUserBooks(flex="65" layout="column", flex-xs="100")
         form(layout layout-align="center")
           div(layout="row" flex)
             md-input-container.md-icon-float.md-block.md-title(flex)
@@ -20,19 +81,19 @@ div#shelfBodySup(layout="row", layout-xs="column", md-theme="default")
                 i.fa.fa-search.fa-fw
         div#currentUserBooks
           md-list
-            md-list-item(ng-repeat='book in $ctrl.userBooks')
+            md-list-item(ng-repeat='book in $ctrl.userRegistry.booksOwned')
               md-content.md-padding( layout-xs="column," layout="row", flex )
                 div(flex-xs flex-gt-xs="100" layout="column")
                   md-card
                     md-card-title
                       md-card-title-media
-                        div.md-media-lg.card-media
+                        div.md-media-lg.card-media.md-padding
                           img(ng-src='{{book.imgUrl}}')
                       md-card-title-text
                         span.md-headline {{book.title}}
                         span.md-subhead {{book.author}}
                     md-card-actions(layout="row" layout-align="end center")
-                      md-button.md-icon-button
+                      md-button.md-icon-button.trash(aria-label='list' ng-click="$ctrl.deleteBook($index)")
                          span.glyphicon.glyphicon-trash.pull-right
 
 
@@ -57,7 +118,6 @@ script(type="text/ng-template" id="selectBock.tmpl.pug")
       md-dialog-actions(layout="row")
         span(flex)
         md-button(ng-click="cancel()") Cancel
-        md-button(ng-click="answer('useful')") Select
 
 
 

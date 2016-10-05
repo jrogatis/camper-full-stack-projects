@@ -36,6 +36,10 @@ export class BooksController {
       })
   }
 
+  isLoggedIn() {
+   return  (this.Auth.isLoggedInSync())?true:false;
+  }
+
   showDialog(ev, bookToRequestIndex) {
     this.dialog = this.$mdDialog.show({
         scope: this.$scope,

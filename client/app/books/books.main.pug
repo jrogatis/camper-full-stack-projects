@@ -16,7 +16,7 @@ div#booksBody(md-theme="default")
             li  I can propose a trade and wait for the other user to accept the trade.
 
       div#listBooks(flex="75" layout="column", flex-xs="100")
-        a(href='/shelf') shelf
+        md-button.md-raised.md-primary(href='/shelf' ng-show='$ctrl.isLoggedIn()') Your book Shelf!
         md-grid-list(md-cols="1",
                     md-cols-sm="2",
                     md-cols-md="4",

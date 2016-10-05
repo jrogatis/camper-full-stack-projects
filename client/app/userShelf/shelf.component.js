@@ -140,11 +140,12 @@ export class ShelfController {
   }
 
   findOfferDetails() {
-    this.userRegistry.pendingTradingOffers.map((tradingOffer, index) => {
+  this.userRegistry.pendingTradingOffers.map((tradingOffer, index) => {
+    if (tradingOffer.tradeAccepted === null) {
       //get the book details to display
       this.$http.get(`/api/books/book/${tradingOffer.bookOfferID}`)
         .then(bookDetail => {
-            //find details for this specific book
+          //find details for this specific book
           const specificBookOffer = _.find(bookDetail.data.booksOwned, {
             _id: tradingOffer.bookOfferID
           });
@@ -162,15 +163,16 @@ export class ShelfController {
           };
           this.userOffers.push(offerToAdd);
         });
-    })
-  }
-
-  findRequestDetails() {
-    this.userRegistry.pendingTradingRequests.map((TradingRequests, index) => {
+    }
+  })
+}
+findRequestDetails() {
+  this.userRegistry.pendingTradingRequests.map((TradingRequests, index) => {
+    if (TradingRequests.tradeAccepted === null) {
       //get the book details to display
       this.$http.get(`/api/books/book/${TradingRequests.bookRequestedID}`)
         .then(bookDetail => {
-            //find details for this specific book
+          //find details for this specific book
           const specificBookOffer = _.find(this.userRegistry.booksOwned, {
             _id: TradingRequests.bookOfferID
           })
@@ -187,8 +189,9 @@ export class ShelfController {
           };
           this.userRequests.push(requestToAdd);
         });
-    })
-  }
+    }
+  })
+}
 
   acceptOffer(index) {
      this.$http.post('/api/books/acceptTrade', {pendingTradingOffers: this.userRegistry.pendingTradingOffers[index]._id})

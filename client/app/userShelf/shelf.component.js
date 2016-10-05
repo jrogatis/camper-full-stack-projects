@@ -153,7 +153,7 @@ export class ShelfController {
             _id: tradingOffer.bookRequestedID
           });
           let offerToAdd = {
-
+            offerId: tradingOffer._id,
             offerBookId: specificBookOffer._id,
             offerTitle: specificBookOffer.title,
             offerUrl: specificBookOffer.imgUrl,
@@ -194,7 +194,7 @@ findRequestDetails() {
 }
 
   acceptOffer(index) {
-     this.$http.post('/api/books/acceptTrade', {pendingTradingOffers: this.userRegistry.pendingTradingOffers[index]._id})
+    this.$http.post('/api/books/acceptTrade', {pendingTradingOffers: this.userOffers[index].offerId})
   }
 }
 

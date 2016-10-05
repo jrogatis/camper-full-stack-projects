@@ -127,9 +127,6 @@ function handleBookOfferAceptance(aceptedOfferID) {
 function handleBookSwap(offeredEntity, requestEntity, selectedOffer) {
   console.log(offeredEntity._id, selectedOffer.bookRequestedID);
   var event1Id = new mongoose.Types.ObjectId()
-
-  //console.log(selectedOffer);
-
   const bookToTradeFromOfferedEntity = _.find(offeredEntity.booksOwned, book =>  book._id.toString() === selectedOffer.bookRequestedID )
   const bookToTradeFromRequestEntity = _.find(requestEntity.booksOwned, book =>  book._id.toString() === selectedOffer.bookOfferID )
   const pendingTradingRequestsIDFromRequestEntity = _.find(requestEntity.pendingTradingRequests, TradingRequest =>  TradingRequest.bookRequestedID === selectedOffer.bookRequestedID )
@@ -139,35 +136,17 @@ function handleBookSwap(offeredEntity, requestEntity, selectedOffer) {
   offeredEntity.booksOwned.push(bookToTradeFromRequestEntity)
   const CurOfferedEntity = offeredEntity.pendingTradingOffers.id(selectedOffer._id)
   CurOfferedEntity.tradeAccepted =  Date.now();
-  //console.log('CurOffedEntity',  CurOffedEntity);
-  //console.log('offeredEntity',  offeredEntity);
-  //offeredEntity.save()
+  offeredEntity.save()
 
   requestEntity.booksOwned.pull({_id: selectedOffer.bookOfferID})
   requestEntity.booksOwned.push(bookToTradeFromOfferedEntity);
-  //requestEntity.save()
+  const curRequestedEntityTradingRequests = requestEntity.pendingTradingRequests.id(pendingTradingRequestsIDFromRequestEntity._id);
+  curRequestedEntityTradingRequests.tradeAccepted =  Date.now();
+
+  requestEntity.save()
 
 }
 
-/*function handleTradingAcceptDates() {
-
-        //now set both the pendingTradingOffers and pendingTradingRequests as done
-        const pendingTradingOfferIndex = offeredEntity.pendingTradingOffers.findIndex(offer => {
-          return offer._id.toString() === aceptedOfferID.pendingTradingOffers
-        })
-        console.log(pendingTradingOfferIndex);
-        offeredEntity.pendingTradingOffers[pendingTradingOfferIndex].tradeAccepted = _.now();
-
-        //from the offer book i need to find the owner and then the pendingTradingRequests index to alter..
-        const pendingTradingRequestIndex = requestEntity.pendingTradingRequests.findIndex(requests => {
-          return requests.bookOfferID.toString() === selectedOffer.bookOfferID
-        })
-
-        // i can have more then one requests offering the same book so if i trade the book all requests with this
-        //offer book was fullfiled
-
-        requestEntity.pendingTradingRequests[pendingTradingRequestIndex].tradeAccepted = _.now();
-}*/
 
 
 // Gets a list of Books

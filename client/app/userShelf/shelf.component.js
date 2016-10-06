@@ -197,8 +197,7 @@ export class ShelfController {
   acceptOffer(index) {
     this.$http.post('/api/books/acceptTrade', {
       pendingTradingOffers: this.userOffers[index].offerId
-    })
-    .then(this.$onInit());
+    }).then(this.$onInit())
   }
 }
 

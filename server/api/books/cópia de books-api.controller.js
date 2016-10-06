@@ -113,68 +113,73 @@ function handleBookOfferAceptance(aceptedOfferID) {
     });
 
     Books.findOne({
-        'booksOwned._id': selectedOffer.bookOfferID
-      }).exec()
-      .then(requestEntity => {
-        const bookToTradeFromOfferedEntity = _.find(offeredEntity.booksOwned, book => book._id.toString() === selectedOffer.bookRequestedID);
-        const bookToTradeFromRequestEntity = _.find(requestEntity.booksOwned, book => book._id.toString() === selectedOffer.bookOfferID);
+      'booksOwned._id': selectedOffer.bookOfferID
+    }).exec()
+    .then(requestEntity => {
+      handleBookSwap(offeredEntity, requestEntity, selectedOffer);
+    });
+  };
+}
 
-        /////// ALL THE OFFERS AND REQUESTS THAT HAVE THAT BOOK NEED TO BE DELETED!!!
-        offeredEntity.booksOwned.pull({
-          _id: selectedOffer.bookRequestedID
-        });
-        offeredEntity.booksOwned.push(bookToTradeFromRequestEntity);
-        offeredEntity.save();
+function handleBookSwap(offeredEntity, requestEntity, selectedOffer) {
+  //var event1Id = new mongoose.Types.ObjectId();
+  const bookToTradeFromOfferedEntity = _.find(offeredEntity.booksOwned, book => book._id.toString() === selectedOffer.bookRequestedID);
+  const bookToTradeFromRequestEntity = _.find(requestEntity.booksOwned, book => book._id.toString() === selectedOffer.bookOfferID);
 
-        Books.update({
-          _id: offeredEntity._id
-        }, {
-          $pull: {
-            pendingTradingOffers: {
-              bookRequestedID: selectedOffer.bookRequestedID
-            }
-          },
-        }, err => console.log('err', err));
+  /////// ALL THE OFFERS AND REQUESTS THAT HAVE THAT BOOK NEED TO BE DELETED!!!
+  offeredEntity.booksOwned.pull({
+    _id: selectedOffer.bookRequestedID
+  });
+  offeredEntity.booksOwned.push(bookToTradeFromRequestEntity);
+  offeredEntity.save();
 
-        Books.update({
-          _id: offeredEntity._id
-        }, {
-          $pull: {
-            pendingTradingRequests: {
-              bookOfferID: selectedOffer.bookOfferID
-            }
-          },
-        }, err => console.log('err', err));
+  Books.update({
+    _id: offeredEntity._id
+  }, {
+    $pull: {
+      pendingTradingOffers: {
+        bookRequestedID: selectedOffer.bookRequestedID
+      }
+    },
+  }, err => console.log('err', err));
 
-        requestEntity.booksOwned.pull({
-          _id: selectedOffer.bookOfferID
-        });
-        requestEntity.booksOwned.push(bookToTradeFromOfferedEntity);
-        requestEntity.save();
-        Books.update({
-          _id: requestEntity._id
-        }, {
-          $pull: {
-            pendingTradingOffers: {
-              bookRequestedID: selectedOffer.bookRequestedID
-            }
-          },
-        }, err => console.log('err', err));
-        Books.update({
-          _id: requestEntity._id
-        }, {
-          $pull: {
-            pendingTradingRequests: {
-              bookOfferID: selectedOffer.bookOfferID
-            }
-          },
-        }, err => console.log('err', err));
+  Books.update({
+    _id: offeredEntity._id
+  }, {
+    $pull: {
+      pendingTradingRequests: {
+        bookOfferID: selectedOffer.bookOfferID
+      }
+    },
+  }, err => console.log('err', err));
 
-      });
-    };
-  }
+  requestEntity.booksOwned.pull({
+    _id: selectedOffer.bookOfferID
+  });
+  requestEntity.booksOwned.push(bookToTradeFromOfferedEntity);
+  requestEntity.save();
+  Books.update({
+    _id: requestEntity._id
+  }, {
+    $pull: {
+      pendingTradingOffers: {
+        bookRequestedID: selectedOffer.bookRequestedID
+      }
+    },
+  }, err => console.log('err', err));
+  Books.update({
+    _id: requestEntity._id
+  }, {
+    $pull: {
+      pendingTradingRequests: {
+        bookOfferID: selectedOffer.bookOfferID
+      }
+    },
+  }, err => console.log('err', err));
 
 
+  return offeredEntity;
+}
 // Gets a list of Books
 export function index(req, res) {
   return Books.find().exec()

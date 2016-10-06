@@ -132,11 +132,11 @@ export function Modal($rootScope, $uibModal, ngMaterial) {
         modal: {
           dismissable: true,
           title: 'User Story',
-          html:`<ul>
-                <li>I can view a graph displaying the recent trend lines for each added stock.</li>
-                <li>I can add new stocks by their symbol name.</li>
-                <li>I can remove stocks.</li>
-                <li>I can see changes in real-time when any other user adds or removes a stock. For this you will need to use Web Sockets.</li>
+          html: `<ul>
+                  <li>I can view a graph displaying the recent trend lines for each added stock.</li>
+                  <li>I can add new stocks by their symbol name.</li>
+                  <li>I can remove stocks.</li>
+                  <li>I can see changes in real-time when any other user adds or removes a stock. For this you will need to use Web Sockets.</li>
                 </ul>`,
           buttons: [{
             classes: 'btn-default',

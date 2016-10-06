@@ -20,7 +20,7 @@ var events = {
 // Register the event emitter to the model events
 for(var e in events) {
   let event = events[e];
-  BooksEvents.schema.post(e, emitEvent(event));
+  Books.schema.post(e, emitEvent(event));
 }
 
 function emitEvent(event) {

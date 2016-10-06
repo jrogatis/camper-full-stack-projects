@@ -39,8 +39,6 @@ div#shelfBodySup(layout="row", layout-xs="column", md-theme="default")
                         md-card-actions(layout="row" layout-align="end center")
                           md-button.md-icon-button(aria-label='list' ng-click="$ctrl.acceptOffer($index)")
                              span.glyphicon.glyphicon-ok.pull-right
-                          md-button.md-icon-button(aria-label='list' ng-click="$ctrl.negateOffer($index)")
-                             span.glyphicon.glyphicon-remove.pull-right
           v-pane(id="Requests")
             v-pane-header(id="Requests-header",  aria-controls="Requests-content")
               h4 Requests from you
@@ -67,9 +65,6 @@ div#shelfBodySup(layout="row", layout-xs="column", md-theme="default")
                                   img(ng-src='{{request.requestedUrl}}')
                                 md-card-title-text
                                    span.md-subheader {{request.requestedTitle}}
-                        md-card-actions(layout="row" layout-align="end center")
-                          md-button.md-icon-button(aria-label='list' ng-click="$ctrl.deleteRequest($index)")
-                              span.glyphicon.glyphicon-trash.pull-right
 
       div#listUserBooks(flex="65" layout="column", flex-xs="100")
         form(layout layout-align="center")
@@ -95,7 +90,7 @@ div#shelfBodySup(layout="row", layout-xs="column", md-theme="default")
                         span.md-subhead {{book.author}}
                     md-card-actions(layout="row" layout-align="end center")
                       md-button.md-icon-button.trash(aria-label='list' ng-click="$ctrl.deleteBook($index)")
-                         span.glyphicon.glyphicon-trash.pull-right
+
 
 
 

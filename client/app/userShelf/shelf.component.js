@@ -4,7 +4,6 @@ import angular from 'angular';
 const ngRoute = require('angular-route');
 import routing from './shelf.routes';
 import _Auth from '../../components/auth/auth.module';
-import oauthButtons from '../../components/oauth-buttons';
 import jsonpatch from 'fast-json-patch';
 import ModalService from '../../components/modal/modal.service';
 import ngMessages from 'angular-messages';
@@ -12,8 +11,6 @@ import ngMaterial from 'angular-material';
 import ngAnimate from 'angular-animate';
 import vAccordion from 'v-accordion';
 import _ from 'lodash';
-
-
 
 
 export class ShelfController {
@@ -33,13 +30,14 @@ export class ShelfController {
     this.userOffers = [];
     this.userRequests = [];
 
-    $scope.$on('$destroy', function () {
+    $scope.$on('$destroy', function() {
       socket.unsyncUpdates('books');
-    })
+    });
   }
 
   loadSocket() {
-    this.socket.syncUpdates('books', this.userRegistry, (event, item) => {
+    this.socket.syncUpdates('books', this.userRegistry, event => {
+      console.log('passei');
       switch (event) {
       case 'deleted':
         console.log(event);
@@ -67,7 +65,7 @@ export class ShelfController {
   }
 
   CaptEnter(event) {
-    if (event.which === 13) {
+    if(event.which === 13) {
       this.searchBook(event);
     }
   }
@@ -82,24 +80,24 @@ export class ShelfController {
       .success(response => {
         this.$scope.booksJson = response.items;
         this.showDialog(ev);
-      })
+      });
   }
 
   showDialog(ev) {
     this.dialog = this.$mdDialog.show({
-        scope: this.$scope,
-        preserveScope: true,
-        controller: DialogController,
-        templateUrl: 'selectBock.tmpl.pug',
-        parent: angular.element(document.body),
-        targetEvent: ev,
-        clickOutsideToClose: false,
-        fullscreen: this.$scope.customFullscreen // Only for -xs, -sm breakpoints.
-      })
-      .then(answer => {
-        this.addBookonDb(answer);
-      });
-  };
+      scope: this.$scope,
+      preserveScope: true,
+      controller: DialogController,
+      templateUrl: 'selectBock.tmpl.pug',
+      parent: angular.element(document.body),
+      targetEvent: ev,
+      clickOutsideToClose: false,
+      fullscreen: this.$scope.customFullscreen // Only for -xs, -sm breakpoints.
+    })
+    .then(answer => {
+      this.addBookonDb(answer);
+    });
+  }
 
   addBookonDb(index) {
     const bookToAdd = this.$scope.booksJson[index];
@@ -108,16 +106,16 @@ export class ShelfController {
       title: bookToAdd.volumeInfo.title,
       author: ('authors' in bookToAdd.volumeInfo) ? bookToAdd.volumeInfo.authors[0] : '',
       imgUrl: bookToAdd.volumeInfo.imageLinks.smallThumbnail
-    }
+    };
     const userReg = {
       userID: this.CurUser._id,
       userName: this.CurUser.name,
       booksOwned: [book]
-    }
+    };
 
     //fist get to know if user have books or not
     //console.log('antes da checagem', this.userBooks, book)
-    if (this.userRegistry) {
+    if(this.userRegistry) {
       //if this user hav books so add only the booksOwned fild.
       const observer = jsonpatch.observe(this.userRegistry);
       this.userRegistry.booksOwned.push(book);
@@ -140,76 +138,82 @@ export class ShelfController {
   }
 
   findOfferDetails() {
-  this.userRegistry.pendingTradingOffers.map((tradingOffer, index) => {
-    if (tradingOffer.tradeAccepted === null) {
-      //get the book details to display
-      this.$http.get(`/api/books/book/${tradingOffer.bookOfferID}`)
-        .then(bookDetail => {
-          //find details for this specific book
-          const specificBookOffer = _.find(bookDetail.data.booksOwned, {
-            _id: tradingOffer.bookOfferID
+    this.userOffers = [];
+    this.userRegistry.pendingTradingOffers.map(tradingOffer => {
+      if(tradingOffer.tradeAccepted === null) {
+        //get the book details to display
+        this.$http.get(`/api/books/book/${tradingOffer.bookOfferID}`)
+          .then(bookDetail => {
+            //find details for this specific book
+            const specificBookOffer = _.find(bookDetail.data.booksOwned, {
+              _id: tradingOffer.bookOfferID
+            });
+            const specificBookRequest = _.find(this.userRegistry.booksOwned, {
+              _id: tradingOffer.bookRequestedID
+            });
+            let offerToAdd = {
+              offerId: tradingOffer._id,
+              offerBookId: specificBookOffer._id,
+              offerTitle: specificBookOffer.title,
+              offerUrl: specificBookOffer.imgUrl,
+              requestedBookId: specificBookRequest._id,
+              requestedTitle: specificBookRequest.title,
+              requestedUrl: specificBookRequest.imgUrl,
+            };
+            this.userOffers.push(offerToAdd);
           });
-          const specificBookRequest = _.find(this.userRegistry.booksOwned, {
-            _id: tradingOffer.bookRequestedID
+      }
+    });
+  }
+
+  findRequestDetails() {
+    this.userRequests = [];
+    this.userRegistry.pendingTradingRequests.map(TradingRequests => {
+      if(TradingRequests.tradeAccepted === null) {
+        //get the book details to display
+        this.$http.get(`/api/books/book/${TradingRequests.bookRequestedID}`)
+          .then(bookDetail => {
+            //find details for this specific book
+            const specificBookOffer = _.find(this.userRegistry.booksOwned, {
+              _id: TradingRequests.bookOfferID
+            });
+            const specificBookRequest = _.find(bookDetail.data.booksOwned, {
+              _id: TradingRequests.bookRequestedID
+            });
+            const requestToAdd = {
+              offerBookId: specificBookOffer._id,
+              offerTitle: specificBookOffer.title,
+              offerUrl: specificBookOffer.imgUrl,
+              requestedBookId: specificBookRequest._id,
+              requestedTitle: specificBookRequest.title,
+              requestedUrl: specificBookRequest.imgUrl,
+            };
+            this.userRequests.push(requestToAdd);
           });
-          let offerToAdd = {
-            offerId: tradingOffer._id,
-            offerBookId: specificBookOffer._id,
-            offerTitle: specificBookOffer.title,
-            offerUrl: specificBookOffer.imgUrl,
-            requestedBookId: specificBookRequest._id,
-            requestedTitle: specificBookRequest.title,
-            requestedUrl: specificBookRequest.imgUrl,
-          };
-          this.userOffers.push(offerToAdd);
-        });
-    }
-  })
-}
-findRequestDetails() {
-  this.userRegistry.pendingTradingRequests.map((TradingRequests, index) => {
-    if (TradingRequests.tradeAccepted === null) {
-      //get the book details to display
-      this.$http.get(`/api/books/book/${TradingRequests.bookRequestedID}`)
-        .then(bookDetail => {
-          //find details for this specific book
-          const specificBookOffer = _.find(this.userRegistry.booksOwned, {
-            _id: TradingRequests.bookOfferID
-          })
-          const specificBookRequest = _.find(bookDetail.data.booksOwned, {
-            _id: TradingRequests.bookRequestedID
-          })
-          const requestToAdd = {
-            offerBookId: specificBookOffer._id,
-            offerTitle: specificBookOffer.title,
-            offerUrl: specificBookOffer.imgUrl,
-            requestedBookId: specificBookRequest._id,
-            requestedTitle: specificBookRequest.title,
-            requestedUrl: specificBookRequest.imgUrl,
-          };
-          this.userRequests.push(requestToAdd);
-        });
-    }
-  })
-}
+      }
+    });
+  }
 
   acceptOffer(index) {
-    this.$http.post('/api/books/acceptTrade', {pendingTradingOffers: this.userOffers[index].offerId})
+    this.$http.post('/api/books/acceptTrade', {
+      pendingTradingOffers: this.userOffers[index].offerId
+    })
+    .then(this.$onInit());
   }
 }
 
 DialogController.$inject = ['$scope', '$mdDialog'];
 
 function DialogController($scope, $mdDialog) {
-  $scope.hide = function () {
+  $scope.hide = function() {
     $mdDialog.hide();
   };
 
-  $scope.cancel = function () {
+  $scope.cancel = function() {
     $mdDialog.cancel();
   };
 
-  $scope.answer = function (answer) {
+  $scope.answer = function(answer) {
     $mdDialog.hide(answer);
   };
 }

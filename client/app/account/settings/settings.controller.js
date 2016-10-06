@@ -5,7 +5,33 @@ export default class SettingsController {
   /*@ngInject*/
   constructor(Auth) {
     this.Auth = Auth;
+    this.user = {};
+    this.onInit();
+
   }
+
+  onInit(){
+
+   this.Auth.getCurrentUser().then(user => {
+     this.user.fullName = user.fullName;
+     this.user.city = user.city;
+     this.user.state = user.state;
+   })
+
+  }
+
+  changeSettings(Settingform){
+    this.submitted = true;
+    this.Auth.changeSettings(this.user)
+      .then(() => {
+       this.message = 'User successfully changed.';
+      })
+       .catch(error => {
+         this.message = error;
+    })
+  }
+
+
 
   changePassword(form) {
     this.submitted = true;

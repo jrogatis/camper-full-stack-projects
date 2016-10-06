@@ -80,6 +80,19 @@ export function AuthService($location, $http, $cookies, $q, appConfig, Util, Use
         .$promise;
     },
 
+    changeSettings(newUser, callback) {
+      return User.changeSettings({
+        id: currentUser._id
+      }, {
+        newUser
+      }, function() {
+        return safeCb(callback)(null);
+      }, function(err) {
+        return safeCb(callback)(err);
+      })
+        .$promise;
+    },
+
     /**
      * Change password
      *

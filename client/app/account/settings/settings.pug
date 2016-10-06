@@ -1,8 +1,30 @@
 .container
   .row
     .col-sm-12
-      h1 Change Address
+      h1 Change Settings
+    .col-sm-12
+     form.form(name='Settingform', ng-submit='vm.changeSettings(form)')
+      .form-group
+        label Full Name
+        input.form-control(type='text'
+          name='fullName'
+          ng-model='vm.user.fullName'
+          mongoose-error='')
+      .form-group
+        label City
+        input.form-control(type='text'
+          name='city'
+          ng-model='vm.user.city'
+          mongoose-error='')
+      .form-group
+        label State
+        input.form-control(type='text'
+          name='state'
+          ng-model='vm.user.state'
+          mongoose-error='')
 
+
+      button.btn.btn-lg.btn-primary(type='submit') Save changes
   .row
     .col-sm-12
       h1 Change Password

@@ -17,6 +17,13 @@ export function UserResource($resource) {
       params: {
         id: 'me'
       }
+    },
+    changeSettings: {
+      method: 'PUT',
+      params: {
+        controller: 'settings'
+      }
     }
+
   });
 }

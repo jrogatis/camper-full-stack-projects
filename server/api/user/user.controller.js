@@ -98,6 +98,25 @@ export function changePassword(req, res) {
     });
 }
 
+export function changeSettings(req, res) {
+  var userId = req.user._id;
+  var userNewSettings = req.body;
+  console.log(userNewSettings)
+
+  return User.findById(userId).exec()
+    .then(user => {
+      user.fullName = userNewSettings.newUser.fullName;
+      user.city = userNewSettings.newUser.city;
+      user.state = userNewSettings.newUser.state;
+       console.log('no user',userNewSettings,  user)
+      return user.save()
+        .then(() => {
+          res.status(204).end();
+        })
+        .catch(error=> console.log(error));
+    })
+};
+
 /**
  * Get my info
  */

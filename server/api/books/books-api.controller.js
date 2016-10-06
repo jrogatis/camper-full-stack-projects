@@ -145,6 +145,7 @@ function handleBookSwap(offeredEntity, requestEntity, selectedOffer) {
 
   requestEntity.save()
 
+  return offeredEntity
 }
 
 
@@ -201,7 +202,10 @@ export function acceptBookTrade(req, res) {
     }).exec()
     .then(handleEntityNotFound(res))
     .then(handleBookOfferAceptance(req.body))
+    .then(respondWithResult(res))
+    .catch(handleError(res));
 }
+
 
 
 export function showAllBooks(req, res) {

@@ -8,6 +8,7 @@ div#shelfBodySup(layout="row", layout-xs="column", md-theme="default")
   #shelfContainer.container
     div#shelfBody(layout="row", layout-xs="column")
       div#pendingTranding.md-padding(flex="35", flex-xs="100")
+        md-button.md-raised.md-primary(href='/books' ) All Books Shelf!
         v-accordion#accordionPendingTrades.vAccordion--default(control="accordionPendingTrades")
           v-pane(id="Offers")
             v-pane-header(id="Offers-header",  aria-controls="Offers-content")

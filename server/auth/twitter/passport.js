@@ -8,6 +8,9 @@ export function setup(User, config) {
     callbackURL: config.twitter.callbackURL
   },
   function(token, tokenSecret, profile, done) {
+    profile._json.id = `${profile._json.id}`;
+    profile.id = `${profile.id}`;
+
     User.findOne({'twitter.id': profile.id}).exec()
       .then(user => {
         if(user) {

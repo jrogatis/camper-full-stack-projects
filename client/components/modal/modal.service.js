@@ -147,7 +147,24 @@ export function Modal($rootScope, $uibModal, ngMaterial) {
           }]
         }
       }, 'modal-info');
-    }
+    },
+       sameOwner() {
+      var sameOwner;
+      sameOwner = openModal({
+        modal: {
+          dismissable: true,
+          title: 'Same Owner',
+          html: '<h3>You alredy own this book.</h3>',
+          buttons: [{
+            classes: 'btn-default',
+            text: 'Ok',
+            click(e) {
+              sameOwner.dismiss(e);
+            }
+          }]
+        }
+      }, 'modal-danger');
+    },
   };
 }
 

@@ -1,0 +1,77 @@
+$shelfbackground: #26c6da;
+#banner.books.hero-unit {
+  border-bottom: none;
+  margin-top: -20px;
+  position: relative;
+  padding: 30px 15px;
+  color: #F5F5F5;
+  text-align: center;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+  background: $shelfbackground;
+  .container {
+    h1 {
+      margin-top: 0px;
+      font-size: 60px;
+      line-height: 1;
+      letter-spacing: -1px;
+    }
+    span i {
+      font-size: 2em;
+    }
+  }
+}
+
+div#booksBody {
+  min-height: calc(100vh - 176px);
+  //overflow-y: scroll;
+  background-color: $shelfbackground;
+  color: #F5F5F5;
+  h3 {
+    padding-bottom: 10px;
+  }
+  div#userStory {
+    div#divider {
+      border-right-width: 1px;
+      border-right-color: #004eff;
+      border-right-style: solid;
+      padding-right: 10px;
+    }
+  }
+
+  div#listBooks {
+    #listContent {
+      background-color: #4399b9;
+        max-height: calc(50vh - 176px);
+      overflow-y: scroll;
+    }
+    md-grid-list {
+
+      md-grid-tile-footer {
+        background: rgba(0, 0, 0, 0.68);
+        height: 26px;
+      }
+      md-grid-tile:hover {
+        background: #4399b9;
+        opacity: 1;
+        -webkit-transform: scale(1.1);
+        -moz-transform: scale(1.1);
+        -ms-transform: scale(1.1);
+        transform: scale(1.1);
+      }
+    }
+
+    form {
+      div md-input-container label {
+        color: white;
+      }
+    }
+    md-input-container.md-default-theme label,
+    md-input-container label,
+    md-input-container.md-default-theme .md-placeholder,
+    md-input-container .md-placeholder {
+      color: white;
+      border-bottom-color: white;
+    }
+  }
+}
+

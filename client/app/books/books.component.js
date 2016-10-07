@@ -79,7 +79,7 @@ export class BooksController {
     if(_.find(this.booksThatUserOwns, {
       _id: bookToRequestID
     })) {
-      alert('You alredy own this book, please select other!');
+      this.Modal.sameOwner();
     } else {
       this.$http.post('/api/books/bookTrade', {
         bookToOfferID: bookToOfferID,

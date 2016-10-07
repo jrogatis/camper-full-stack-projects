@@ -1,6 +1,6 @@
 import angular from 'angular';
 const ngRoute = require('angular-route');
-import routing from './books.routes';
+import routing from './pint.routes';
 import _Auth from '../../components/auth/auth.module';
 import ngMaterial from 'angular-material';
 import ModalService from '../../components/modal/modal.service';

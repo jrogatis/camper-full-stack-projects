@@ -1,5 +1,5 @@
-$shelfbackground: #26c6da;
-#banner.books.hero-unit {
+$pintbackground: #29b6f6;
+#banner.pint.hero-unit {
   border-bottom: none;
   margin-top: -20px;
   position: relative;
@@ -7,7 +7,7 @@ $shelfbackground: #26c6da;
   color: #F5F5F5;
   text-align: center;
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
-  background: $shelfbackground;
+  background: $pintbackground;
   .container {
     h1 {
       margin-top: 0px;
@@ -21,10 +21,10 @@ $shelfbackground: #26c6da;
   }
 }
 
-div#booksBody {
+div#pintBody {
   min-height: calc(100vh - 176px);
   //overflow-y: scroll;
-  background-color: $shelfbackground;
+  background-color: $pintbackground;
   color: #F5F5F5;
   h3 {
     padding-bottom: 10px;
@@ -38,7 +38,7 @@ div#booksBody {
     }
   }
 
-  div#listBooks {
+  div#listpint {
     #listContent {
       background-color: #4399b9;
         max-height: calc(50vh - 176px);

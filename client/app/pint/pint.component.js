@@ -5,6 +5,8 @@ import _Auth from '../../components/auth/auth.module';
 import ngMaterial from 'angular-material';
 import ModalService from '../../components/modal/modal.service';
 import _ from 'lodash';
+import ngMessages from 'angular-messages';
+import angularGrid from 'angulargrid';
 
 
 export class PintController {
@@ -18,31 +20,34 @@ export class PintController {
     this.CurUser = this.Auth.getCurrentUserSync();
     this.$routeParams = $routeParams;
     this.Modal = Modal;
-    this.$mdDialog = $mdDialog;
-    this.$scope.customFullscreen = false;
+    this.allPints = [];
   }
 
   $onInit() {
-    /*this.$http.get('/api/books/allBooks')
+    this.$http.get('/api/pint/')
       .then(results => {
-        this.UserWithBooks = results.data;
-        let books = [];
-        results.data.map(user => {
-          user.booksOwned.map(book => {
-            books.push(book);
-          });
-        });
-        this.allBooks = books;
-      });*/
+        this.allPints =  results.data;
+        console.log(  this.allPints );
+      });
   }
 
   isLoggedIn() {
     return this.Auth.isLoggedInSync() ? true : false;
   }
 
+  addPicture() {
+    const picToAdd = {
+      ownerId: this.Auth.getCurrentUserSync()._id,
+      imgUrl: this.UrlToAdd,
+      desc: this.DescToAdd
+    };
+    this.$http.post('api/pint', picToAdd);
+
+  }
+
 }
 
-export default angular.module('camperFullStackProjectsApp.pint', [ngRoute, _Auth])
+export default angular.module('camperFullStackProjectsApp.pint', [ngRoute, _Auth, ngMessages, angularGrid])
   .config(routing)
   .component('pint', {
     template: require('./pint.main.pug'),

@@ -6,6 +6,7 @@ var PintSchema = new mongoose.Schema({
   ownerId: String,
   imgUrl: String,
   desc: String,
+  date: { type: Date, default: Date.now },
   likes: [{
     userId: String
   }]

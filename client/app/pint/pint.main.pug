@@ -1,7 +1,10 @@
 header#banner.pint.hero-unit(layout="row", layout-xs="column")
   .container
-    h1 Your time to chare!
+    h1 Your time to Share!
+
+
 div#pintBody(md-theme="default")
+  div#pintSubmenu
   #pintContainer.container
     div#pintBody(layout="row", layout-xs="column")
       div#userStory(flex="25", flex-xs="100")
@@ -15,7 +18,41 @@ div#pintBody(md-theme="default")
             li  As an unauthenticated user, I can browse other users' walls of images.
             li As an authenticated user, if I upload an image that is broken, it will be replaced by a placeholder image. (can use jQuery broken image detection)
 
-      div#listImages(flex="75" layout="column", flex-xs="100")
+      div#listPints(flex="75" layout="column", flex-xs="100")
+        md-toolbar.md-menu-toolbar
+          md-menu-bar
+            md-menu
+              md-button(ng-click="$mdOpenMenu()") Add Picture
+              md-menu-content#pint
+                md-menu-item
+                  form(name="inputForm")
+                    div(layout='column')
+                      md-input-container
+                        label url
+                        input(type="url", name="url", ng-model="$ctrl.UrlToAdd", required)
+                      div(ng-messages="inputForm.url.$error" ng-show="inputForm.url.$dirty")
+                        div(ng-message="required") This is required!
+                        div(ng-message="url") invalid url!
+                      md-input-container
+                        label Description
+                        input(type="text",name="description", ng-model="$ctrl.DescToAdd", required)
+                      div(ng-messages="inputForm.description.$error" ng-show="inputForm.description.$dirty")
+                        div(ng-message="required") This is required!
+
+                      md-button(ng-click="$ctrl.addPicture()" ng-disabled="!inputForm.$valid") Add
+            md-button My Picures
+        ul.dynamic-grid(angular-grid="$ctrl.allPints" grid-width="250" gutter-size="10" angular-grid-id="gallery" refresh-on-img-load="false")
+          li.grid(data-ng-repeat="pint in $ctrl.allPints")
+            img.grid-img(src="{{pint.imgUrl }}"  data-actual-width = "100px"  data-actual-height="100px")
+            div.img-desc-wrap
+              div.title
+                h5 {{pint.desc}}
+              div.uploadDate
+                p Uploaded on: {{pint.date | date: 'EEE MMM dd yyyy'}}
+              div.likes-wrap
+                div.likes
+                  md-button
+                    i.fa.fa-thumbs-up-fw
 
 
 

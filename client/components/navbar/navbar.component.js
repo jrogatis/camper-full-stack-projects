@@ -4,9 +4,8 @@
 import angular from 'angular';
 
 export class NavbarComponent {
-
-  constructor($location, Auth) {
-    'ngInject';
+    /*@ngInject*/
+  constructor($location, Auth ) {
 
     this.$location = $location;
     this.isLoggedIn = Auth.isLoggedInSync;
@@ -16,6 +15,12 @@ export class NavbarComponent {
 
   isActive(route) {
     return route === this.$location.path();
+  }
+
+  buildMenu() {
+     isActive
+    //console.log(window.location.pathname + window.location.search)
+
   }
 }
 

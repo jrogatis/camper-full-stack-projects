@@ -53,7 +53,7 @@ div#pintBody(md-theme="default")
                     span.md-title {{pint.userName}}
                     span.md-subhead {{pint.desc}}
                 div.uploadDate
-                  p Uploaded on: {{pint.date | date: 'MMM dd yyyy'}}
+                  p Uploaded on: {{pint.date | date: 'MMM yyyy'}}
                 md-divider
                 md-card-icon-actions(layout="row" layout-align="center")
                   md-button.md-icon-button.likes(aria-label="likes", ng-click="$ctrl.vote($index)")

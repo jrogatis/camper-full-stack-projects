@@ -39,6 +39,7 @@ function removeEntity(res) {
     if (entity) {
       return entity.remove()
         .then(function () {
+          console.log('cheguei')
           return res.status(204).end();
         });
     }

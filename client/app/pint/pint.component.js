@@ -7,11 +7,12 @@ import ModalService from '../../components/modal/modal.service';
 import _ from 'lodash';
 import ngMessages from 'angular-messages';
 import angularGrid from 'angulargrid';
+import jsonpatch from 'fast-json-patch';
 
 
 export class PintController {
   /*@ngInject*/
-  constructor($scope, $http, Auth, $window, $routeParams, Modal) {
+  constructor($scope, $http, Auth, $window, $routeParams, Modal, angularGridInstance, socket) {
     this.$http = $http;
     this.$scope = $scope;
     this.Auth = Auth;
@@ -21,15 +22,77 @@ export class PintController {
     this.$routeParams = $routeParams;
     this.Modal = Modal;
     this.allPints = [];
+    this.angularGridInstance = angularGridInstance;
+    this.socket = socket;
+
+     $scope.$on('$destroy', function() {
+      socket.unsyncUpdates('pints');
+    });
   }
 
   $onInit() {
-    this.$http.get('/api/pint/')
+   this.loadImages();
+  }
+
+  loadSocket() {
+    this.socket.unsyncUpdates('pint');
+    this.socket.syncUpdates('pint', this.allPints, (event, item) => {
+      console.log('sockrt')
+      switch (event) {
+      case 'deleted':
+         let newAllPints = [];
+          this.allPints.map(pint => {
+            if (pint._id != item._id) {
+              newAllPints.push(pint)
+            };
+            this.allPints = newAllPints;
+            this.angularGridInstance.gallery.refresh();
+          })
+
+        break;
+      case 'created':
+        console.log(item);
+          const indexToAdd = _.findIndex(this.allPints,  pint => {
+            return pint._id.toString() === item._id
+          })
+        this.$http.get(`/api/users/userInfo/${item.ownerId}`)
+          .then(result => {
+           const info = result.data
+            if (info.provider === 'twitter') {
+              this.allPints[indexToAdd].userImage = info.twitter.profile_image_url_https;
+              this.allPints[indexToAdd].userName = info.name;
+            }
+          this.angularGridInstance.gallery.refresh()
+        })
+        console.log('no create', event);
+        break;
+      default:
+        console.log('no default', event);
+      }
+    });
+    return true;
+  }
+
+  loadImages() {
+     this.$http.get('/api/pint/')
       .then(results => {
         this.allPints =  results.data;
-        console.log(  this.allPints );
+        this.loadSocket();
+        this.allPints.map( (pint, index) =>{
+          this.$http.get(`/api/users/userInfo/${pint.ownerId}`)
+            .then(result => {
+             const info = result.data
+              if (info.provider === 'twitter') {
+                pint.userImage = info.twitter.profile_image_url_https;
+                pint.userName = info.name;
+              }
+          })
+        })
+        this.angularGridInstance.gallery.refresh()
       });
   }
+
+
 
   isLoggedIn() {
     return this.Auth.isLoggedInSync() ? true : false;
@@ -42,10 +105,41 @@ export class PintController {
       desc: this.DescToAdd
     };
     this.$http.post('api/pint', picToAdd);
+ }
 
+
+
+  isOwner(index) {
+   return this.isLoggedIn() && this.allPints[index].ownerId ===  this.Auth.getCurrentUserSync()._id.toString();
   }
 
+  vote(index) {
+    if (this.Auth.isLoggedInSync()) {
+      //fist check if the user alredy vote for this
+      const curUserVotesIndex = _.findIndex(this.allPints[index].likes, likes => {
+        return likes.userId === this.Auth.getCurrentUserSync()._id
+      })
+       const observer = jsonpatch.observe(this.allPints[index]);
+      if(curUserVotesIndex === -1 ) {
+        this.allPints[index].likes.push({
+          userId: this.Auth.getCurrentUserSync()._id
+        });
+      } else {
+        this.allPints[index].likes.splice(curUserVotesIndex,1);
+      }
+      var patches = jsonpatch.generate(observer);
+      this.$http.patch(`/api/pint/${this.allPints[index]._id}`, patches);
+    } else {
+      this.Modal.needLogin();
+    }
+  }
+
+  deletePint(index) {
+      console.log('delete')
+      this.$http.delete(`/api/pint/${this.allPints[index]._id}`)
+      }
 }
+
 
 export default angular.module('camperFullStackProjectsApp.pint', [ngRoute, _Auth, ngMessages, angularGrid])
   .config(routing)
@@ -53,5 +147,6 @@ export default angular.module('camperFullStackProjectsApp.pint', [ngRoute, _Auth
     template: require('./pint.main.pug'),
     controller: PintController
   })
-  .name;
+  .name
+
 

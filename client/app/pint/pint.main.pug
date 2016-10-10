@@ -38,21 +38,31 @@ div#pintBody(md-theme="default")
                         input(type="text",name="description", ng-model="$ctrl.DescToAdd", required)
                       div(ng-messages="inputForm.description.$error" ng-show="inputForm.description.$dirty")
                         div(ng-message="required") This is required!
-
                       md-button(ng-click="$ctrl.addPicture()" ng-disabled="!inputForm.$valid") Add
             md-button My Picures
-        ul.dynamic-grid(angular-grid="$ctrl.allPints" grid-width="250" gutter-size="10" angular-grid-id="gallery" refresh-on-img-load="false")
+        ul.dynamic-grid(angular-grid="$ctrl.allPints", ag-grid-width="200", ag-gutter-size="10", ag-id="gallery" ag-refresh-on-img-load="false")
           li.grid(data-ng-repeat="pint in $ctrl.allPints")
-            img.grid-img(src="{{pint.imgUrl }}"  data-actual-width = "100px"  data-actual-height="100px")
+            img.grid-img(src="{{pint.imgUrl}}",  data-actual-width = "100px" , data-actual-height="100px")
             div.img-desc-wrap
               div.title
-                h5 {{pint.desc}}
+                h4 {{pint.desc}}
+              md-divider
+              div.owner
+                div(layout="row")
+                  img.md-avatar(ng-src="{{pint.userImage}}")
+                  span {{pint.userName}}
+              md-divider
               div.uploadDate
-                p Uploaded on: {{pint.date | date: 'EEE MMM dd yyyy'}}
-              div.likes-wrap
-                div.likes
-                  md-button
-                    i.fa.fa-thumbs-up-fw
+                p Uploaded on: {{pint.date | date: 'MMM dd yyyy'}}
+              md-divider
+              section.action-wraper(layout="row" layout-sm="column" layout-align="center center" layout-wrap)
+                md-button.likes(aria-label="likes", ng-click="$ctrl.vote($index)")
+                  span()
+                    i.fa.fa-thumbs-o-up.fa-fw &nbsp &nbsp
+                      span {{pint.likes.length}}
+                md-button.trash(aria-label="trash", ng-show="$ctrl.isOwner($index)", ng-click= "$ctrl.deletePint($index)")
+                  span
+                    i.fa.fa-trash.fa-fw
 
 
 

@@ -53,6 +53,13 @@ div#pintBody {
     .dynamic-grid.angular-grid {
       display: block;
     }
+
+    .owner{
+      padding: 4px 4px;
+      img{
+        padding-right: 10px;
+      }
+    }
     .grid {
       color: black;
       position: absolute;
@@ -102,6 +109,18 @@ div#pintBody {
     .img-desc-wrap{
       padding-left: 10px;
     }
-
+    .md-button.trash{
+       max-width: 50%;
+      margin-left: 0px;
+      margin-right: 0px;
+    }
+     .md-button.likes{
+         margin-left: 0px;
+      margin-right: 0px;
+       max-width: 50%;
+      i {
+        color: blue;
+      }
+    }
   }
 }

@@ -18,6 +18,16 @@ function handleError(res, statusCode) {
   };
 }
 
+
+function handleEntityNotFound(res) {
+  return function(entity) {
+    if(!entity) {
+      res.status(404).end();
+      return null;
+    }
+    return entity;
+  };
+}
 /**
  * Get list of users
  * restriction: 'admin'
@@ -48,9 +58,23 @@ export function create(req, res) {
 }
 
 /**
+ * Get a single user Info
+ */
+export function showInfo(req, res) {
+  var userId = req.params.id;
+
+  return User.findById(userId).exec()
+    .then(handleEntityNotFound(res))
+    .then(user => {
+      res.json(user);
+    });
+}
+
+/**
  * Get a single user
  */
 export function show(req, res, next) {
+  console.log('no show');
   var userId = req.params.id;
 
   return User.findById(userId).exec()
@@ -108,7 +132,6 @@ export function changeSettings(req, res) {
       user.fullName = userNewSettings.newUser.fullName;
       user.city = userNewSettings.newUser.city;
       user.state = userNewSettings.newUser.state;
-       console.log('no user',userNewSettings,  user)
       return user.save()
         .then(() => {
           res.status(204).end();

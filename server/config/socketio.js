@@ -20,6 +20,8 @@ function onConnect(socket) {
   require('../api/poll/poll.socket').register(socket);
   require('../api/nl/nl-api.socket').register(socket);
   require('../api/stocks/stocks-api.socket').register(socket);
+  require('../api/books/books-api.socket').register(socket);
+  require('../api/pint/pint.api.socket').register(socket);
 }
 
 export default function(socketio) {

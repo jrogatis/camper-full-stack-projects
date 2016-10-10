@@ -44,7 +44,7 @@ div#pintBody(md-theme="default")
         ul.dynamic-grid(angular-grid="$ctrl.allPints", ag-grid-width="200", ag-gutter-size="10", ag-id="gallery" ag-refresh-on-img-load="false")
           li.grid(data-ng-repeat="pint in $ctrl.allPintsToShow")
             md-card
-              img.md-card-image(ng-src="{{pint.imgUrl}}", data-actual-width = "100px" , data-actual-height="100px" alt="Washed Out")
+              img.md-card-image(ng-src="{{pint.imgUrl}}", err-src="http://placehold.it/350x150?text=Ohhh+Nooo" )
               md-card-content
                 md-card-header(ng-click="$ctrl.filterFromId($index)")
                   md-card-avatar

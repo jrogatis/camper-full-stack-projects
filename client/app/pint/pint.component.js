@@ -164,6 +164,17 @@ export class PintController {
 
 
 export default angular.module('camperFullStackProjectsApp.pint', [ngRoute, _Auth, ngMessages, angularGrid])
+  .directive('errSrc', function() {
+  return {
+    link: function(scope, element, attrs) {
+      element.bind('error', function() {
+        if (attrs.src != attrs.errSrc) {
+          attrs.$set('src', attrs.errSrc);
+        }
+      });
+    }
+  }
+})
   .config(routing)
   .component('pint', {
     template: require('./pint.main.pug'),

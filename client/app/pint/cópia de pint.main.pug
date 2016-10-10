@@ -43,26 +43,27 @@ div#pintBody(md-theme="default")
             md-button(ng-click="$ctrl.toggleAllImages()") All Picures
         ul.dynamic-grid(angular-grid="$ctrl.allPints", ag-grid-width="200", ag-gutter-size="10", ag-id="gallery" ag-refresh-on-img-load="false")
           li.grid(data-ng-repeat="pint in $ctrl.allPintsToShow")
-            md-card
-              img.md-card-image(ng-src="{{pint.imgUrl}}", data-actual-width = "100px" , data-actual-height="100px" alt="Washed Out")
-              md-card-content
-                md-card-header(ng-click="$ctrl.filterFromId($index)")
-                  md-card-avatar
-                    img.md-user-avatar(ng-src="{{pint.userImage}}")
-                  md-card-header-text
-                    span.md-title {{pint.userName}}
-                    span.md-subhead {{pint.desc}}
-                div.uploadDate
-                  p Uploaded on: {{pint.date | date: 'MMM dd yyyy'}}
-                md-divider
-                md-card-icon-actions(layout="row" layout-align="center")
-                  md-button.md-icon-button.likes(aria-label="likes", ng-click="$ctrl.vote($index)")
-                    span()
-                      i.fa.fa-thumbs-o-up.fa-fw &nbsp &nbsp
-                        span {{pint.likes.length}}
-                  md-button.md-icon-button.trash(aria-label="trash", ng-show="$ctrl.isOwner($index)", ng-click= "$ctrl.deletePint($index)")
-                    span
-                      i.fa.fa-trash.fa-fw
+            img.grid-img(ng-src="{{pint.imgUrl}}", data-actual-width = "100px" , data-actual-height="100px", title="Image Not Found")
+            div.img-desc-wrap
+              div.title
+                h4 {{pint.desc}}
+              md-divider
+              div.owner(ng-click="$ctrl.filterFromId($index)")
+                div(layout="row")
+                  img.md-avatar(ng-src="{{pint.userImage}}")
+                  span {{pint.userName}}
+              md-divider
+              div.uploadDate
+                p Uploaded on: {{pint.date | date: 'MMM dd yyyy'}}
+              md-divider
+              section.action-wraper(layout="row" layout-sm="column" layout-align="center center" layout-wrap)
+                md-button.likes(aria-label="likes", ng-click="$ctrl.vote($index)")
+                  span()
+                    i.fa.fa-thumbs-o-up.fa-fw &nbsp &nbsp
+                      span {{pint.likes.length}}
+                md-button.trash(aria-label="trash", ng-show="$ctrl.isOwner($index)", ng-click= "$ctrl.deletePint($index)")
+                  span
+                    i.fa.fa-trash.fa-fw
 
 
 

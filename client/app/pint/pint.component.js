@@ -25,6 +25,7 @@ export class PintController {
     this.angularGridInstance = angularGridInstance;
     this.socket = socket;
 
+
      $scope.$on('$destroy', function() {
       socket.unsyncUpdates('pints');
     });
@@ -37,22 +38,27 @@ export class PintController {
   loadSocket() {
     this.socket.unsyncUpdates('pint');
     this.socket.syncUpdates('pint', this.allPints, (event, item) => {
+      this.allPintsToShow = this.allPints.concat([]);
       console.log('sockrt')
       switch (event) {
       case 'deleted':
-         let newAllPints = [];
-          this.allPints.map(pint => {
-            if (pint._id != item._id) {
-              newAllPints.push(pint)
-            };
-            this.allPints = newAllPints;
-            this.angularGridInstance.gallery.refresh();
-          })
+          break;
+        case 'created':
+         this.loadUserInfoOnPint(item)
+          break;
+        case 'updated':
+          this.loadUserInfoOnPint(item)
+          break;
+        default:
+          console.log('no default', event);
+          break;
+      }
+    });
+    return true;
+  }
 
-        break;
-      case 'created':
-        console.log(item);
-          const indexToAdd = _.findIndex(this.allPints,  pint => {
+  loadUserInfoOnPint(item){
+        const indexToAdd = _.findIndex(this.allPints,  pint => {
             return pint._id.toString() === item._id
           })
         this.$http.get(`/api/users/userInfo/${item.ownerId}`)
@@ -62,16 +68,12 @@ export class PintController {
               this.allPints[indexToAdd].userImage = info.twitter.profile_image_url_https;
               this.allPints[indexToAdd].userName = info.name;
             }
-          this.angularGridInstance.gallery.refresh()
+          //this.angularGridInstance.gallery.refresh()
         })
-        console.log('no create', event);
-        break;
-      default:
-        console.log('no default', event);
-      }
-    });
-    return true;
+
+
   }
+
 
   loadImages() {
      this.$http.get('/api/pint/')
@@ -88,35 +90,56 @@ export class PintController {
               }
           })
         })
-        this.angularGridInstance.gallery.refresh()
+       this.allPintsToShow = this.allPints.concat([]);
       });
   }
 
+  filterForUser(id) {
+    return el => {
+         return el.ownerId === id
+    }
+  }
 
+  toggleAllImages () {
+        this.allPintsToShow = this.allPints.concat([]);
+        this.angularGridInstance.gallery.refresh();
+  }
+
+ filterFromId(index) {
+   console.log('no filter');
+   this.allPintsToShow = this.allPints.filter(this.filterForUser(this.allPintsToShow[index].ownerId));
+ }
+
+
+ filterByActualUser() {
+   this.allPintsToShow = this.allPints.filter(this.filterForUser(this.Auth.getCurrentUserSync()._id));
+ }
 
   isLoggedIn() {
     return this.Auth.isLoggedInSync() ? true : false;
   }
 
   addPicture() {
+    if(this.Auth.isLoggedInSync()) {
     const picToAdd = {
       ownerId: this.Auth.getCurrentUserSync()._id,
       imgUrl: this.UrlToAdd,
       desc: this.DescToAdd
     };
     this.$http.post('api/pint', picToAdd);
+    } else {
+        this.Modal.needLogin();
+    }
  }
 
-
-
   isOwner(index) {
-   return this.isLoggedIn() && this.allPints[index].ownerId ===  this.Auth.getCurrentUserSync()._id.toString();
+   return this.isLoggedIn() && this.allPintsToShow[index].ownerId ===  this.Auth.getCurrentUserSync()._id.toString();
   }
 
   vote(index) {
     if (this.Auth.isLoggedInSync()) {
       //fist check if the user alredy vote for this
-      const curUserVotesIndex = _.findIndex(this.allPints[index].likes, likes => {
+      const curUserVotesIndex = _.findIndex(this.allPintsToShow[index].likes, likes => {
         return likes.userId === this.Auth.getCurrentUserSync()._id
       })
        const observer = jsonpatch.observe(this.allPints[index]);
@@ -135,7 +158,6 @@ export class PintController {
   }
 
   deletePint(index) {
-      console.log('delete')
       this.$http.delete(`/api/pint/${this.allPints[index]._id}`)
       }
 }

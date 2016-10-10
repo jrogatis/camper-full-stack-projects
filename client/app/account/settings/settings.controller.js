@@ -17,7 +17,7 @@ export default class SettingsController {
     });
   }
 
-  changeSettings(Settingform) {
+  changeSettings() {
     this.submitted = true;
     this.Auth.changeSettings(this.user)
       .then(() => {

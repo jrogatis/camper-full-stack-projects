@@ -17,29 +17,30 @@ div#booksBody(md-theme="default")
 
       div#listBooks(flex="75" layout="column", flex-xs="100")
         md-button.md-raised.md-primary(href='/shelf' ng-show='$ctrl.isLoggedIn()') Your book Shelf!
-        md-grid-list(md-cols="1",
-                    md-cols-sm="2",
-                    md-cols-md="4",
-                    md-cols-gt-md="6",
-                    md-row-height-gt-md="1:1",
-                    md-row-height="1:1",
-                    md-gutter="12px",
-                    md-gutter-gt-sm="8px" )
-          md-grid-tile.tile.background(ng-repeat="book in $ctrl.allBooks",
-                  md-rowspan="2",
-                  md-colspan="2",
-                  md-colspan-sm="1",
-                  md-colspan-xs="1",
-                  style = "{left: calc(((50% - 4px) + 8px) * 0); width: calc(((50% - 4px) * 1) + 0px); padding-top: calc(((37.5% - 4px) * 2) + 8px); margin-top: calc(((37.5% - 4px) + 8px) * 0);}")
-            div.md-media-xs.card-media.md-padding
-              img(ng-src='{{book.imgUrl}}')
-            div(layout="column", layout-align="center center")
-              h4 {{book.title}}
-              h5 {{book.author}}
+        div#listContent
+          md-grid-list(md-cols="1",
+                      md-cols-sm="2",
+                      md-cols-md="4",
+                      md-cols-gt-md="6",
+                      md-row-height-gt-md="1:1",
+                      md-row-height="1:1",
+                      md-gutter="12px",
+                      md-gutter-gt-sm="8px" )
+            md-grid-tile.tile.background(ng-repeat="book in $ctrl.allBooks",
+                    md-rowspan="2",
+                    md-colspan="2",
+                    md-colspan-sm="1",
+                    md-colspan-xs="1",
+                    style = "{left: calc(((50% - 4px) + 8px) * 0); width: calc(((50% - 4px) * 1) + 0px); padding-top: calc(((37.5% - 4px) * 2) + 8px); margin-top: calc(((37.5% - 4px) + 8px) * 0);}")
+              div.md-media-xs.card-media.md-padding
+                img(ng-src='{{book.imgUrl}}')
+              div(layout="column", layout-align="center center")
+                h4 {{book.title}}
+                h5 {{book.author}}
 
-            md-grid-tile-footer
-              md-button.md-icon-button(aria-label='list' ng-click="$ctrl.proposeTrade($event, $index)")
-                span.glyphicon.glyphicon-retweet.pull-right
+              md-grid-tile-footer
+                md-button.md-icon-button(aria-label='list' ng-click="$ctrl.proposeTrade($event, $index)")
+                  span.glyphicon.glyphicon-retweet.pull-right
 
 
 

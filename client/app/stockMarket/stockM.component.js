@@ -28,14 +28,14 @@ export class stockMController {
 
   formatDate(date) {
     const d = new Date(date);
-    let myMonth = ` ${(d.getMonth() + 1)}`;
-    let myDay = ` ${d.getDate()}`;
+    let myMonth = `${(d.getMonth() + 1)}`;
+    let myDay = `${d.getDate()}`;
     const year = d.getFullYear();
 
     if(myMonth.length < 2) myMonth = `0${myMonth}`;
     if(myDay.length < 2) myDay = `0${myDay}`;
 
-    return [year, myMonth, myDay].join('-');
+    return `${year}-${myMonth}-${myDay}`;
   }
 
   endDateToQuery() {
@@ -165,6 +165,8 @@ export class stockMController {
     const url = encodeURIComponent(`select Date,Close from yahoo.finance.historicaldata where symbol in ("${stockIDs}") and startDate = "${this.startDateToQuery()}" and endDate = "${this.endDateToQuery()}"`);
     const tailUrl = '&format=json&diagnostics=true&env=store://datatables.org/alltableswithkeys&callback=';
     const completeUrl = baseUrl + url + tailUrl;
+     console.log(stockIDs,this.startDateToQuery(), this.endDateToQuery() );
+    console.log(baseUrl, url, tailUrl);
     return completeUrl;
   }
 

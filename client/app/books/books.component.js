@@ -3,6 +3,7 @@ const ngRoute = require('angular-route');
 import routing from './books.routes';
 import _Auth from '../../components/auth/auth.module';
 import ngMaterial from 'angular-material';
+import ngAnimate from 'angular-animate';
 import ModalService from '../../components/modal/modal.service';
 import _ from 'lodash';
 
@@ -105,7 +106,7 @@ function DialogAllBooksController($scope, $mdDialog) {
   };
 }
 
-export default angular.module('camperFullStackProjectsApp.books', [ngRoute, _Auth, ModalService, ngMaterial])
+export default angular.module('camperFullStackProjectsApp.books', [ngRoute, _Auth, ModalService, ngMaterial, ngAnimate])
   .config(routing)
   .component('books', {
     template: require('./books.main.pug'),

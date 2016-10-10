@@ -148,7 +148,7 @@ export function Modal($rootScope, $uibModal, ngMaterial) {
         }
       }, 'modal-info');
     },
-       sameOwner() {
+    sameOwner() {
       var sameOwner;
       sameOwner = openModal({
         modal: {

@@ -37,41 +37,36 @@ div#booksBody {
       padding-right: 10px;
     }
   }
-
   div#listBooks {
-    #listContent {
-      background-color: #4399b9;
-        max-height: calc(50vh - 176px);
+    div#listContent {
+      max-height: calc(100vh - 176px);
       overflow-y: scroll;
-    }
-    md-grid-list {
-
-      md-grid-tile-footer {
-        background: rgba(0, 0, 0, 0.68);
-        height: 26px;
+      md-grid-list {
+        md-grid-tile-footer {
+          background: rgba(0, 0, 0, 0.68);
+          height: 26px;
+        }
+        md-grid-tile:hover {
+          background: #4399b9;
+          opacity: 1;
+          -webkit-transform: scale(1.1);
+          -moz-transform: scale(1.1);
+          -ms-transform: scale(1.1);
+          transform: scale(1.1);
+        }
       }
-      md-grid-tile:hover {
-        background: #4399b9;
-        opacity: 1;
-        -webkit-transform: scale(1.1);
-        -moz-transform: scale(1.1);
-        -ms-transform: scale(1.1);
-        transform: scale(1.1);
+      form {
+        div md-input-container label {
+          color: white;
+        }
       }
-    }
-
-    form {
-      div md-input-container label {
+      md-input-container.md-default-theme label,
+      md-input-container label,
+      md-input-container.md-default-theme .md-placeholder,
+      md-input-container .md-placeholder {
         color: white;
+        border-bottom-color: white;
       }
-    }
-    md-input-container.md-default-theme label,
-    md-input-container label,
-    md-input-container.md-default-theme .md-placeholder,
-    md-input-container .md-placeholder {
-      color: white;
-      border-bottom-color: white;
     }
   }
 }
-

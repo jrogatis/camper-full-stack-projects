@@ -36,10 +36,10 @@ export class PintController {
   }
 
   loadSocket() {
-    this.socket.unsyncUpdates('pint');
+    //this.socket.unsyncUpdates('pint');
     this.socket.syncUpdates('pint', this.allPints, (event, item) => {
       //this.allPintsToShow = this.allPints.concat([]);
-      console.log('socket')
+     //console.log('socket')
       switch (event) {
       case 'deleted':
         this.allPintsToShow = this.allPints.concat([]);

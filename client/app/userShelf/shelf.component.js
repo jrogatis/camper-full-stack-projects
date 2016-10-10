@@ -76,6 +76,7 @@ export class ShelfController {
     const midleUrl = `"${searchStr}"`;
     const tailUrl = '&printType=books&key=AIzaSyDBnaoG2Rh_dq6DyNVrpglN-uBjP8lMsI8';
     const url = `${baseUrl}${midleUrl}${tailUrl}`;
+    console.log('book url', url);
     this.$http.get(url)
       .success(response => {
         this.$scope.booksJson = response.items;
@@ -105,7 +106,7 @@ export class ShelfController {
       googleID: bookToAdd.id,
       title: bookToAdd.volumeInfo.title,
       author: ('authors' in bookToAdd.volumeInfo) ? bookToAdd.volumeInfo.authors[0] : '',
-      imgUrl: bookToAdd.volumeInfo.imageLinks.smallThumbnail
+      imgUrl: bookToAdd.volumeInfo.imageLinks.smallThumbnail.replace('http', 'https')
     };
     const userReg = {
       userID: this.CurUser._id,

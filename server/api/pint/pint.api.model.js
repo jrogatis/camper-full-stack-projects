@@ -10,6 +10,6 @@ var PintSchema = new mongoose.Schema({
   likes: [{
     userId: String
   }]
-})
+});
 
 export default mongoose.model('Pint', PintSchema);

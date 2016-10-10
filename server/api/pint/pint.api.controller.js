@@ -16,7 +16,7 @@ import Pint from './pint.api.model';
 function respondWithResult(res, statusCode) {
   statusCode = statusCode || 200;
   return entity => {
-    if (entity) {
+    if(entity) {
       return res.status(statusCode).json(entity);
     }
     return null;
@@ -24,10 +24,10 @@ function respondWithResult(res, statusCode) {
 }
 
 function patchUpdates(patches) {
-  return function (entity) {
+  return function(entity) {
     try {
       jsonpatch.apply(entity, patches);
-    } catch (err) {
+    } catch(err) {
       return Promise.reject(err);
     }
     return entity.save();
@@ -35,11 +35,10 @@ function patchUpdates(patches) {
 }
 
 function removeEntity(res) {
-  return function (entity) {
-    if (entity) {
+  return function(entity) {
+    if(entity) {
       return entity.remove()
-        .then(function () {
-          console.log('cheguei')
+        .then(function() {
           return res.status(204).end();
         });
     }
@@ -47,8 +46,8 @@ function removeEntity(res) {
 }
 
 function handleEntityNotFound(res) {
-  return function (entity) {
-    if (!entity) {
+  return function(entity) {
+    if(!entity) {
       res.status(404).end();
       return null;
     }
@@ -58,7 +57,7 @@ function handleEntityNotFound(res) {
 
 function handleError(res, statusCode) {
   statusCode = statusCode || 500;
-  return function (err) {
+  return function(err) {
     res.status(statusCode).send(err);
   };
 }
@@ -87,14 +86,14 @@ export function create(req, res) {
 
 // Upserts the given pint in the DB at the specified ID
 export function upsert(req, res) {
-  if (req.body._id) {
+  if(req.body._id) {
     delete req.body._id;
   }
   return Pint.findOneAndUpdate(req.params.id, req.body, {
-      upsert: true,
-      setDefaultsOnInsert: true,
-      runValidators: true
-    }).exec()
+    upsert: true,
+    setDefaultsOnInsert: true,
+    runValidators: true
+  }).exec()
     .then(respondWithResult(res))
     .catch(handleError(res));
 }

@@ -113,8 +113,8 @@ function handleBookOfferAceptance(aceptedOfferID) {
     });
 
     Books.findOne({
-        'booksOwned._id': selectedOffer.bookOfferID
-      }).exec()
+      'booksOwned._id': selectedOffer.bookOfferID
+    }).exec()
       .then(requestEntity => {
         const bookToTradeFromOfferedEntity = _.find(offeredEntity.booksOwned, book => book._id.toString() === selectedOffer.bookRequestedID);
         const bookToTradeFromRequestEntity = _.find(requestEntity.booksOwned, book => book._id.toString() === selectedOffer.bookOfferID);
@@ -169,11 +169,9 @@ function handleBookOfferAceptance(aceptedOfferID) {
             }
           },
         }, err => console.log('err', err));
-
       });
-    };
-  }
-
+  };
+}
 
 // Gets a list of Books
 export function index(req, res) {

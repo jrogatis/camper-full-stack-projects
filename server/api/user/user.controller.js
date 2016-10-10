@@ -125,8 +125,6 @@ export function changePassword(req, res) {
 export function changeSettings(req, res) {
   var userId = req.user._id;
   var userNewSettings = req.body;
-  console.log(userNewSettings)
-
   return User.findById(userId).exec()
     .then(user => {
       user.fullName = userNewSettings.newUser.fullName;
@@ -136,9 +134,9 @@ export function changeSettings(req, res) {
         .then(() => {
           res.status(204).end();
         })
-        .catch(error=> console.log(error));
-    })
-};
+        .catch(error => console.log(error));
+    });
+}
 
 /**
  * Get my info

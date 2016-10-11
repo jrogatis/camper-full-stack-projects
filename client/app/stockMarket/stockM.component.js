@@ -112,8 +112,8 @@ export class stockMController {
         this.loadSocket();
         response.map(item => {
           this.$http.get(this.urlForYahooQuery(item.ID))
-            .success(ret => {
-              this.addSeries(item.ID, ret.query.results.quote);
+            .then(ret => {
+              this.addSeries(item.ID, ret.data.query.results.quote);
             }
           );
         });
@@ -158,15 +158,12 @@ export class stockMController {
     this.$http.delete(`/api/stocks/${item._id}`);
   }
 
-  //Quanti api iKjZVpmzmah-k5o1zDKS
-  //startDate = '2015-01-01', endDate = '2016-01-08'
+
   urlForYahooQuery(stockIDs) {
     const baseUrl = 'https://query.yahooapis.com/v1/public/yql?q=';
-    const url = encodeURIComponent(`select Date,Close from yahoo.finance.historicaldata where symbol in ("${stockIDs}") and startDate = "${this.startDateToQuery()}" and endDate = "${this.endDateToQuery()}"`);
+    const url = encodeURIComponent(`select Date, Close from yahoo.finance.historicaldata where symbol in ("${stockIDs}") and startDate = "${this.startDateToQuery()}" and endDate = "${this.endDateToQuery()}"`);
     const tailUrl = '&format=json&diagnostics=true&env=store://datatables.org/alltableswithkeys&callback=';
     const completeUrl = baseUrl + url + tailUrl;
-     console.log(stockIDs,this.startDateToQuery(), this.endDateToQuery() );
-    console.log(baseUrl, url, tailUrl);
     return completeUrl;
   }
 

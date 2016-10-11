@@ -26,7 +26,7 @@ export class PintController {
     this.socket = socket;
 
 
-    $scope.$on('$destroy', function () {
+    $scope.$on('$destroy', function() {
       socket.unsyncUpdates('pints');
     });
   }
@@ -45,11 +45,11 @@ export class PintController {
         this.allPintsToShow = this.allPints.concat([]);
         break;
       case 'created':
-        this.loadUserInfoOnPint(item)
+        this.loadUserInfoOnPint(item);
         this.allPintsToShow = this.allPints.concat([]);
         break;
       case 'updated':
-        this.loadUserInfoOnPint(item)
+        this.loadUserInfoOnPint(item);
         break;
       default:
         console.log('no default', event);
@@ -62,15 +62,15 @@ export class PintController {
   loadUserInfoOnPint(item) {
     const indexToAdd = _.findIndex(this.allPints, pint => {
       return pint._id.toString() === item._id;
-    })
+    });
     this.$http.get(`/api/users/userInfo/${item.ownerId}`)
       .then(result => {
         const info = result.data;
-        if (info.provider === 'twitter') {
+        if(info.provider === 'twitter') {
           this.allPints[indexToAdd].userImage = info.twitter.profile_image_url_https;
           this.allPints[indexToAdd].userName = info.name;
         }
-      })
+      });
   }
 
 
@@ -79,16 +79,16 @@ export class PintController {
       .then(results => {
         this.allPints = results.data;
         this.loadSocket();
-        this.allPints.map((pint, index) => {
+        this.allPints.map(pint => {
           this.$http.get(`/api/users/userInfo/${pint.ownerId}`)
             .then(result => {
-              const info = result.data
-              if (info.provider === 'twitter') {
+              const info = result.data;
+              if(info.provider === 'twitter') {
                 pint.userImage = info.twitter.profile_image_url_https;
                 pint.userName = info.name;
               }
-            })
-        })
+            });
+        });
         this.allPintsToShow = this.allPints.concat([]);
       });
   }
@@ -96,7 +96,7 @@ export class PintController {
   filterForUser(id) {
     return el => {
       return el.ownerId === id;
-    }
+    };
   }
 
   toggleAllImages() {
@@ -114,12 +114,8 @@ export class PintController {
     this.allPintsToShow = this.allPints.filter(this.filterForUser(this.Auth.getCurrentUserSync()._id));
   }
 
-  isLoggedIn() {
-    return this.Auth.isLoggedInSync() ? true : false;
-  }
-
   addPicture() {
-    if (this.Auth.isLoggedInSync()) {
+    if(this.Auth.isLoggedInSync()) {
       const picToAdd = {
         ownerId: this.Auth.getCurrentUserSync()._id,
         imgUrl: this.UrlToAdd,
@@ -132,7 +128,7 @@ export class PintController {
   }
 
   isOwner(index) {
-    return this.isLoggedIn() && this.allPintsToShow[index].ownerId === this.Auth.getCurrentUserSync()._id.toString();
+    return this.Auth.isLoggedInSync() && this.allPintsToShow[index].ownerId === this.Auth.getCurrentUserSync()._id.toString();
   }
 
   vote(index) {
@@ -140,7 +136,7 @@ export class PintController {
       //fist check if the user alredy vote for this
       const curUserVotesIndex = _.findIndex(this.allPintsToShow[index].likes, likes => {
         return likes.userId === this.Auth.getCurrentUserSync()._id;
-      })
+      });
       const observer = jsonpatch.observe(this.allPintsToShow[index]);
       if(curUserVotesIndex === -1) {
         this.allPintsToShow[index].likes.push({
@@ -157,27 +153,27 @@ export class PintController {
   }
 
   deletePint(index) {
-    this.$http.delete(`/api/pint/${this.allPintsToShow[index]._id}`)
+    this.$http.delete(`/api/pint/${this.allPintsToShow[index]._id}`);
   }
 
 }
 
 
-export default angular.module('camperFullStackProjectsApp.pint', [ngRoute, _Auth, ngMessages, angularGrid])
+export default angular.module('camperFullStackProjectsApp.pint', [ngRoute, _Auth, ngMessages, angularGrid, ModalService])
   .directive('errSrc', function() {
-  return {
-    link: function(scope, element, attrs) {
-      element.bind('error', function() {
-        if (attrs.src != attrs.errSrc) {
-          attrs.$set('src', attrs.errSrc);
-        }
-      });
-    }
-  }
-})
+    return {
+      link: function(scope, element, attrs) {
+        element.bind('error', function() {
+          if(attrs.src != attrs.errSrc) {
+            attrs.$set('src', attrs.errSrc);
+          }
+        });
+      }
+    };
+  })
   .config(routing)
   .component('pint', {
     template: require('./pint.main.pug'),
     controller: PintController
   })
-  .name
+  .name;

@@ -155,9 +155,7 @@ export class PintController {
   deletePint(index) {
     this.$http.delete(`/api/pint/${this.allPintsToShow[index]._id}`);
   }
-
 }
-
 
 export default angular.module('camperFullStackProjectsApp.pint', [ngRoute, _Auth, ngMessages, angularGrid, ModalService])
   .directive('errSrc', function() {

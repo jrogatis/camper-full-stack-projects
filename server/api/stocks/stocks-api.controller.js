@@ -1,6 +1,7 @@
 /**
  * Using Rails-like standard naming convention for endpoints.
  * GET     /api/stocks              ->  index
+ * POST     /api/stocks/quotes       ->  showQuotes
  * POST    /api/stocks              ->  create
  * GET     /api/stocks/:id          ->  show
  * PUT     /api/stocks/:id          ->  upsert
@@ -12,6 +13,93 @@
 
 import jsonpatch from 'fast-json-patch';
 import Stocks from './stocks-api.model';
+import _ from 'lodash';
+import qs from 'querystring';
+import rp from 'request-promise';
+import moment from 'moment';
+import S from 'string';
+const  dateFormats = ['YYYY-MM-DD', 'MM/DD/YYYY'];
+
+
+function camelize(text) {
+  return S(text)
+    .slugify()
+    .camelize()
+    .s;
+}
+
+function toDate(value, valueForError) {
+  try {
+    var date = moment(value, dateFormats).toDate();
+    if (date.getFullYear() < 1400) { return null; }
+    return date;
+  } catch (err) {
+    if (_.isUndefined(valueForError)) {
+      return null;
+    } else {
+      return valueForError;
+    }
+  }
+}
+
+function toFloat(value, valueForNaN) {
+  var result = parseFloat(value);
+  if (isNaN(result)) {
+    if (_.isUndefined(valueForNaN)) {
+      return null;
+    } else {
+      return valueForNaN;
+    }
+  } else  {
+    return result;
+  }
+}
+
+function toInt(value, valueForNaN) {
+  var result = parseInt(value, 10);
+  if (isNaN(result)) {
+    if (_.isUndefined(valueForNaN)) {
+      return null;
+    } else {
+      return valueForNaN;
+    }
+  } else  {
+    return result;
+  }
+}
+
+function transformHistorical(symbol, data) {
+  var headings = data.shift();
+  return _(data)
+    .reverse()
+    .map(function (line) {
+      var result = {};
+      headings.forEach(function (heading, i) {
+        var value = line[i];
+        if (_.includes(['Volume'], heading)) {
+          value = toInt(value, null);
+        } else if (_.includes(['Open', 'High', 'Low', 'Close', 'Adj Close', 'Dividends'], heading)) {
+          value = toFloat(value, null);
+        } else if (_.includes(['Date'], heading)) {
+          value = value
+          /*value = toDate(value, null);
+          if (value && !moment(value).isValid()) {
+            value = null;
+          }*/
+        }
+        result[camelize(heading)] = value;
+      });
+      result.symbol = symbol;
+      return result;
+    })
+    .value();
+}
+
+function parseCSV(text) {
+  return S(text).trim().s.split('\n').map(function (line) {
+    return S(line).trim().parseCSV();
+  });
+}
 
 function respondWithResult(res, statusCode) {
   statusCode = statusCode || 200;
@@ -62,13 +150,38 @@ function handleError(res, statusCode) {
   };
 }
 
-// Gets a list of nl
+// Gets a list of stocks
 export function index(req, res) {
   return Stocks.find().exec()
     .then(respondWithResult(res))
     .catch(handleError(res));
 }
 
+export function showQuotes(req, res) {
+  let values = req.body;
+  const url = 'http://chart.finance.yahoo.com/table.csv?s=';
+  values.from = moment(values.from);
+  values.to = moment(values.to);
+  const qsa = {
+      s: values.symbol,
+      a: values.from.format('MM') - 1,
+      b: values.from.format('DD'),
+      c: values.from.format('YYYY'),
+      d: values.to.format('MM') - 1,
+      e: values.to.format('DD'),
+      f: values.to.format('YYYY'),
+      g: 'd',
+      ignore: '.csv'
+
+  };
+
+  rp({uri: url, qs: qsa})
+    .then (ret => parseCSV(ret))
+    .then(data => transformHistorical(values.symbol, data))
+    .then(respondWithResult(res))
+    .catch(handleError(res));
+
+}
 
 export function show(req, res) {
   //console.log('no show', req.params.id);

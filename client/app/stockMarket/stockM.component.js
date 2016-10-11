@@ -5,6 +5,7 @@ import ModalService from '../../components/modal/modal.service';
 import nvd3 from 'angular-nvd3';
 import _ from 'lodash';
 import d3 from 'd3';
+//import yahooFinance from 'yahoo-finance';
 
 export class stockMController {
   /*@ngInject*/
@@ -29,7 +30,7 @@ export class stockMController {
   formatDate(date) {
     const d = new Date(date);
     let myMonth = `${(d.getMonth() + 1)}`;
-    let myDay = `${d.getDate()}`;
+    let myDay = `${d.getDate()-1}`;
     const year = d.getFullYear();
 
     if(myMonth.length < 2) myMonth = `0${myMonth}`;
@@ -60,10 +61,15 @@ export class stockMController {
         break;
       case 'created':
         this.stockAdd = '';
-        this.$http.get(this.urlForYahooQuery(item.ID))
-          .success(ret => {
-            this.addSeries(item.ID, ret.query.results.quote);
-          });
+        const qs = {
+          symbol: item.ID,
+          from: this.startDateToQuery(),
+          to: this.endDateToQuery()
+        };
+        this.$http.post('/api/stocks/quotes', qs)
+          .then(series => {
+            this.addSeries(item.ID, series.data);
+            });
         break;
       default:
         console.log('no default', event);
@@ -85,19 +91,20 @@ export class stockMController {
   }
 
   customSortDate(a, b) {
-    return new Date(a.Date).getTime() - new Date(b.Date).getTime();
+    return new Date(a.date).getTime() - new Date(b.date).getTime();
   }
 
   custmSortQuotes(a, b) {
     return b.Close - a.Close;
   }
 
-  addSeries(key, values) {
+  addSeries(symbol, values) {
     let stockData = {};
-    stockData.key = key;
+    stockData.key = symbol;
     stockData.values = [];
     values.sort(this.customSortDate);
     values.map(quote => {
+      //console.log(quote);
       stockData.values.push(quote);
     });
     this.data.push(stockData);
@@ -107,19 +114,24 @@ export class stockMController {
   loadDataToDisplay() {
     this.data = [];
     this.$http.get('/api/stocks')
-      .success(response => {
-        this.stockList = response;
+      .then(response => {
+        //console.log('no load data', response)
+        this.stockList = response.data;
         this.loadSocket();
-        response.map(item => {
-          this.$http.get(this.urlForYahooQuery(item.ID))
-            .then(ret => {
-              this.addSeries(item.ID, ret.data.query.results.quote);
+        this.stockList.map(item => {
+          const qs = {
+            symbol: item.ID,
+            from: this.startDateToQuery(),
+            to: this.endDateToQuery()
+          };
+          this.$http.post('/api/stocks/quotes', qs)
+            .then(series => {
+              this.addSeries(item.ID, series.data);
             }
           );
         });
       });
-    return true;
-  }
+     }
 
   CaptEnter(event) {
     if(event.which === 13) {
@@ -135,11 +147,16 @@ export class stockMController {
       ID: this.stockAdd
     })
       ) {
-      this.$http.get(this.urlForYahooQuery(this.stockAdd))
-        .success(data => {
+        const qs = {
+          symbol: this.stockAdd,
+          from: this.startDateToQuery(),
+          to: this.endDateToQuery()
+        };
+        this.$http.post('/api/stocks/quotes', qs)
+          .then(series => {
           //check the return for a valid quotes...
           // that means more the 0 on count
-          if(data.query.count === 0) {
+          if(series.status !== 200) {
             this.Modal.invalidQuote();
           } else {
             //console.log(this.stockList);
@@ -150,21 +167,12 @@ export class stockMController {
             });
           }
         })
-        .catch(error => console.log(error));
+        .catch(error => this.Modal.invalidQuote());
     }
   }
 
   deleteStock(item) {
     this.$http.delete(`/api/stocks/${item._id}`);
-  }
-
-
-  urlForYahooQuery(stockIDs) {
-    const baseUrl = 'https://query.yahooapis.com/v1/public/yql?q=';
-    const url = encodeURIComponent(`select Date, Close from yahoo.finance.historicaldata where symbol in ("${stockIDs}") and startDate = "${this.startDateToQuery()}" and endDate = "${this.endDateToQuery()}"`);
-    const tailUrl = '&format=json&diagnostics=true&env=store://datatables.org/alltableswithkeys&callback=';
-    const completeUrl = baseUrl + url + tailUrl;
-    return completeUrl;
   }
 
   chartOptions = {
@@ -178,8 +186,8 @@ export class stockMController {
         left: 40
       },
 
-      x: d => d3.time.format('%Y-%m-%d').parse(d.Date),
-      y: d => d.Close,
+      x: d => d3.time.format('%Y-%m-%d').parse(d.date),
+      y: d => d.close,
 
       noData: 'Loading Data from Yahoo finance API',
       interactive: true,

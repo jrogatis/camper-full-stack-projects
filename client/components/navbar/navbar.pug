@@ -6,9 +6,8 @@ div#menuApps
             a(href='/settings')
               span.glyphicon.glyphicon-cog
       div
-        md-button(href='/') My Camper Full Stack Projects
-        span(ng-show='$ctrl.isLoggedIn()') Hello {{ $ctrl.getCurrentUser().name }}
         md-menu-bar
+          md-button(href='/') My Camper Full Stack Projects
           md-menu
             md-button(ng-click="$mdOpenMenu()") Projects
             md-menu-content
@@ -25,6 +24,7 @@ div#menuApps
           md-button(ng-hide='$ctrl.isLoggedIn()', ng-class='{active: $ctrl.isActive("/signup")}', href='/signup') Sign up
           md-button(ng-hide='$ctrl.isLoggedIn()', ng-class='{active: $ctrl.isActive("/login")}', href='/login')  Login
           md-button(ng-show='$ctrl.isLoggedIn()', href='/logout') Logout
+          span(ng-show='$ctrl.isLoggedIn()') Hello {{ $ctrl.getCurrentUser().name }}
 
 
 

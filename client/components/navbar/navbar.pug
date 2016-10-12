@@ -1,35 +1,31 @@
-div.navbar.navbar-default.navbar-static-top
-  div.container
-    div.navbar-header
-      button.navbar-toggle(type='button', ng-click='$ctrl.isCollapsed = !$ctrl.isCollapsed')
-        span.sr-only Toggle navigation
-        span.icon-bar
-        span.icon-bar
-        span.icon-bar
-      a.navbar-brand(href='/') My Camper Full Stack Projects
+div#menuApps
+  md-toolbar.md-menu-toolbar
+    div(layout="row")
+      md-toolbar-filler(layout layout-align="center center")
+        span(ng-show='$ctrl.isLoggedIn()', ng-class='{active: $ctrl.isActive("/settings")}')
+            a(href='/settings')
+              span.glyphicon.glyphicon-cog
+      div
+        md-button(href='/') My Camper Full Stack Projects
+        span(ng-show='$ctrl.isLoggedIn()') Hello {{ $ctrl.getCurrentUser().name }}
+        md-menu-bar
+          md-menu
+            md-button(ng-click="$mdOpenMenu()") Projects
+            md-menu-content
+              md-menu-item
+                md-button(href='/vote') Votting
+              md-menu-item
+                md-button(href='/nl') Night Life
+              md-menu-item
+                md-button(href='/stockM') Stocks
+              md-menu-item
+                md-button(href='/books') Books
+              md-menu-item
+                md-button(href='/pint') Pinterest
+          md-button(ng-hide='$ctrl.isLoggedIn()', ng-class='{active: $ctrl.isActive("/signup")}', href='/signup') Sign up
+          md-button(ng-hide='$ctrl.isLoggedIn()', ng-class='{active: $ctrl.isActive("/login")}', href='/login')  Login
+          md-button(ng-show='$ctrl.isLoggedIn()', href='/logout') Logout
 
-    div#navbar-main.navbar-collapse.collapse(uib-collapse='$ctrl.isCollapsed')
-      ul.nav.navbar-nav
 
-        li(ng-repeat='item in $ctrl.menu', ng-class='{active: $ctrl.isActive(item.link)}')
-          a(ng-href='{{item.link}}') {{item.title}}
 
-        li(ng-show='$ctrl.isAdmin()', ng-class='{active: $ctrl.isActive("/admin")}')
-          a(href='/admin') Admin
 
-      ul.nav.navbar-nav.navbar-right
-        li(ng-hide='$ctrl.isLoggedIn()', ng-class='{active: $ctrl.isActive("/signup")}')
-          a(href='/signup') Sign up
-
-        li(ng-hide='$ctrl.isLoggedIn()', ng-class='{active: $ctrl.isActive("/login")}')
-          a(href='/login') Login
-
-        li(ng-show='$ctrl.isLoggedIn()')
-          p.navbar-text Hello {{ $ctrl.getCurrentUser().name }}
-
-        li(ng-show='$ctrl.isLoggedIn()', ng-class='{active: $ctrl.isActive("/settings")}')
-          a(href='/settings')
-            span.glyphicon.glyphicon-cog
-
-        li(ng-show='$ctrl.isLoggedIn()')
-          a(href='/logout') Logout

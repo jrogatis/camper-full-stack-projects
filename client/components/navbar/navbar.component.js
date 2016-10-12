@@ -2,6 +2,10 @@
 /* eslint no-sync: 0 */
 
 import angular from 'angular';
+import angularAria from 'angular-aria';
+import angularAnimate from 'angular-animate';
+import angularMaterial from 'angular-material';
+import angularMessages from 'angular-messages';
 
 export class NavbarComponent {
     /*@ngInject*/
@@ -17,7 +21,9 @@ export class NavbarComponent {
   }
 }
 
-export default angular.module('directives.navbar', [])
+export default angular.module('directives.navbar', [angularAria,
+                angularAnimate,
+                angularMaterial,angularMessages])
   .component('navbar', {
     template: require('./navbar.pug'),
     controller: NavbarComponent

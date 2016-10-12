@@ -11,30 +11,6 @@ header#banner.hero-unit(layout="row", layout-xs="column")
 
     jk-carousel( data="$ctrl.images" item-template-url="'img.tmpl.pug'"  max-width="1800"  max-height="800" auto-slide="true" auto-slide-time="4000" )
 
-div#MainBody(layout="row" layout-align="center top")
-  .container( layout-align="center top")
-    h1.page-header Projects:
-    div(layout="row")
-      div(layout="column")
-        md-list
-          md-list-item
-            a(href='/vote')
-              h3 Votting Machine App
-          md-list-item
-            a(href='/nl')
-              h3 Nightlife Coordination App
-          md-list-item
-            a(href='/stockM')
-              h3 Stock Market Chart App
-      div(layout="column")
-        md-list
-          md-list-item
-            a(href='/books')
-              h3 Books Trading Club App
-          md-list-item
-            a(href='/pint')
-              h3 Pinterest Clone App
-
 script(type="text/ng-template" id="img.tmpl.pug")
   div
     img( ng-src="{{slideItem.src}}")

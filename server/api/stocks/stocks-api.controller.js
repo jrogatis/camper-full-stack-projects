@@ -14,11 +14,10 @@
 import jsonpatch from 'fast-json-patch';
 import Stocks from './stocks-api.model';
 import _ from 'lodash';
-import qs from 'querystring';
 import rp from 'request-promise';
 import moment from 'moment';
 import S from 'string';
-const  dateFormats = ['YYYY-MM-DD', 'MM/DD/YYYY'];
+const dateFormats = ['YYYY-MM-DD', 'MM/DD/YYYY'];
 
 
 function camelize(text) {
@@ -28,42 +27,28 @@ function camelize(text) {
     .s;
 }
 
-function toDate(value, valueForError) {
-  try {
-    var date = moment(value, dateFormats).toDate();
-    if (date.getFullYear() < 1400) { return null; }
-    return date;
-  } catch (err) {
-    if (_.isUndefined(valueForError)) {
-      return null;
-    } else {
-      return valueForError;
-    }
-  }
-}
-
 function toFloat(value, valueForNaN) {
   var result = parseFloat(value);
-  if (isNaN(result)) {
-    if (_.isUndefined(valueForNaN)) {
+  if(isNaN(result)) {
+    if(_.isUndefined(valueForNaN)) {
       return null;
     } else {
       return valueForNaN;
     }
-  } else  {
+  } else {
     return result;
   }
 }
 
 function toInt(value, valueForNaN) {
   var result = parseInt(value, 10);
-  if (isNaN(result)) {
-    if (_.isUndefined(valueForNaN)) {
+  if(isNaN(result)) {
+    if(_.isUndefined(valueForNaN)) {
       return null;
     } else {
       return valueForNaN;
     }
-  } else  {
+  } else {
     return result;
   }
 }
@@ -72,20 +57,16 @@ function transformHistorical(symbol, data) {
   var headings = data.shift();
   return _(data)
     .reverse()
-    .map(function (line) {
+    .map(function(line) {
       var result = {};
-      headings.forEach(function (heading, i) {
+      headings.forEach(function(heading, i) {
         var value = line[i];
-        if (_.includes(['Volume'], heading)) {
+        if(_.includes(['Volume'], heading)) {
           value = toInt(value, null);
         } else if (_.includes(['Open', 'High', 'Low', 'Close', 'Adj Close', 'Dividends'], heading)) {
           value = toFloat(value, null);
-        } else if (_.includes(['Date'], heading)) {
+        } else if(_.includes(['Date'], heading)) {
           value = value
-          /*value = toDate(value, null);
-          if (value && !moment(value).isValid()) {
-            value = null;
-          }*/
         }
         result[camelize(heading)] = value;
       });
@@ -163,16 +144,15 @@ export function showQuotes(req, res) {
   values.from = moment(values.from);
   values.to = moment(values.to);
   const qsa = {
-      s: values.symbol,
-      a: values.from.format('MM') - 1,
-      b: values.from.format('DD'),
-      c: values.from.format('YYYY'),
-      d: values.to.format('MM') - 1,
-      e: values.to.format('DD'),
-      f: values.to.format('YYYY'),
-      g: 'd',
-      ignore: '.csv'
-
+    s: values.symbol,
+    a: values.from.format('MM') - 1,
+    b: values.from.format('DD'),
+    c: values.from.format('YYYY'),
+    d: values.to.format('MM') - 1,
+    e: values.to.format('DD'),
+    f: values.to.format('YYYY'),
+    g: 'd',
+    ignore: '.csv'
   };
 
   rp({uri: url, qs: qsa})
@@ -193,14 +173,14 @@ export function show(req, res) {
     .catch(handleError(res));
 }
 
-// Creates a new nl in the DB
+// Creates a new stock Symbol in the DB
 export function create(req, res) {
   return Stocks.create(req.body)
     .then(respondWithResult(res, 201))
     .catch(handleError(res));
 }
 
-// Upserts the given nl in the DB at the specified ID
+// Upserts the given stock in the DB at the specified ID
 export function upsert(req, res) {
   if(req.body._id) {
     delete req.body._id;

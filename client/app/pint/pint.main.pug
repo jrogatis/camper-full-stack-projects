@@ -41,7 +41,7 @@ div#pintBody(md-theme="default")
                       md-button(ng-click="$ctrl.addPicture()" ng-disabled="!inputForm.$valid") Add
             md-button(ng-click="$ctrl.filterByActualUser()") My Picures
             md-button(ng-click="$ctrl.toggleAllImages()") All Picures
-        ul.dynamic-grid(angular-grid="$ctrl.allPints", ag-grid-width="200", ag-gutter-size="10", ag-id="gallery" ag-refresh-on-img-load="false")
+        ul.dynamic-grid(angular-grid="$ctrl.allPintsToShow", ag-grid-width="200", ag-gutter-size="10", ag-id="gallery" ag-refresh-on-img-load="true")
           li.grid(data-ng-repeat="pint in $ctrl.allPintsToShow")
             md-card
               img.md-card-image(ng-src="{{pint.imgUrl}}", err-src="http://placehold.it/350x150?text=Ohhh+Nooo" )

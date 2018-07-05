@@ -67,7 +67,8 @@
     "sprint-js": "~0.1.0",
     "string": "^3.3.3",
     "v-accordion": "^1.6.0",
-    "yahoo-finance": "^0.2.14"
+    "yahoo-finance": "^0.2.14",
+    "snyk": "^1.88.1"
   },
   "devDependencies": {
     "angular-mocks": "~1.5.5",
@@ -164,10 +165,13 @@
   "scripts": {
     "test": "gulp test",
     "update-webdriver": "node node_modules/protractor/bin/webdriver-manager update",
-    "start": "node server"
+    "start": "node server",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "private": true,
   "description": "This are my projects for Free Code Camp Full Stack Apps",
   "author": "Jean Philip de Rogatis",
-  "license": "MIT"
+  "license": "MIT",
+  "snyk": true
 }

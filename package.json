@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "main": "server/index.js",
   "dependencies": {
-    "angular": "~1.5.5",
+    "angular": "~1.8.0",
     "angular-animate": "~1.5.5",
     "angular-aria": "~1.5.5",
     "angular-carousel": "^1.0.1",
@@ -36,7 +36,7 @@
     "d3": "^3.5.1",
     "errorhandler": "^1.4.2",
     "express": "^4.13.3",
-    "express-jwt": "^3.0.0",
+    "express-jwt": "^6.0.0",
     "express-session": "^1.11.3",
     "fast-json-patch": "^1.0.0",
     "font-awesome": ">=4.1.0",
